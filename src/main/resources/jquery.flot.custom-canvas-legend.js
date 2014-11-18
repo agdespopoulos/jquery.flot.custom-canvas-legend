@@ -84,8 +84,7 @@
 		legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
 		legendCtx.textAlign = "left";
 		legendCtx.textBaseline = "bottom";
-        legendCtx.fillStyle="#F00";
-        
+                legendCtx.fillStyle="#F00";
 	}
 	function defaultLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryHeight, previousEntryWidth){
 		var LEGEND_BOX_WIDTH = 22; // color box
@@ -94,64 +93,85 @@
 	}
 	function ascendingAlphabeticalSort(seriesA, seriesB){
 		return seriesA.text > seriesB.text;
-	} 
+	}
+        function getFontOptions (placeholder){
+            return {
+                    style: placeholder.css("font-style"),
+                    size: Math.round(+placeholder.css("font-size").replace("px", "") || 13),
+                    variant: placeholder.css("font-variant"),
+                    weight: placeholder.css("font-weight"),
+                    family: placeholder.css("font-family")
+		};
+        }
+        function getLegendContainerAndContext (container, placeholder, plotContext){
+            var finalContainer, finalContext;
+            if (container) {
+                if (container.is('canvas')) {
+                    finalContainer = container;
+                }
+                else{
+                    finalContainer = $('<canvas/>').insertAfter(container);
+                }
+                finalContext = $(container)[0].getContext('2d');
+            } else {
+                container = placeholder.find('.legend');
+                finalContext = plotContext;
+            }
+            return {
+                container: finalContainer,
+                context: finalContext
+            };
+        }
+        function getSortedSeries (sortedOption, series){
+            var sortedSeries;
+            if (sortedOption) {
+                if (true === sortedOption || 'ascending' === sortedOption) {
+                    sortedSeries = series.sort(ascendingAlphabeticalSort);
+                }
+                else if ('descending' === sortedOption) {
+                    sortedSeries = series.sort(ascendingAlphabeticalSort).reverse();
+                }
+                else if ('reverse' === sortedOption) {
+                    sortedSeries = series.reverse();
+                }
+                else if ('function' === typeof sortedOption) {
+                    sortedSeries = series.sort(sortedOption);
+                }
+                else {
+                    throw Error('Unrecognized value for "sorted" option: ' + sortedOption);
+                }
+            } else {
+                sortedSeries = series;
+            }
+            return sortedSeries;
+        }
+        function getLegendSize(entrySize, entryLayout){
+            
+        }
 	// draws the legend on the canvas, using the HTML added by flot as a guide
 	function drawLegend(plot, plotCtx) {
 		var options = plot.getOptions();
 		if(!(options.legend.canvas && options.legend.canvas.show)) return;
 
 		var placeholder = plot.getPlaceholder();
-		var fontOptions = {
-				style: placeholder.css("font-style"),
-				size: Math.round(+placeholder.css("font-size").replace("px", "") || 13),
-				variant: placeholder.css("font-variant"),
-				weight: placeholder.css("font-weight"),
-				family: placeholder.css("font-family")
-		};
+		var fontOptions = getFontOptions(placeholder);
 		var entryRender = options.legend.canvas.entryRender || defaultRender;
 		var entryLayout = options.legend.canvas.entryLayout || defaultLayout;
-		//the legendCtx will either be plotCtx or the context from an external canvas,
-		//depending on what is contained in canvas.container
-		var legendCtx, isExternalLegend;
-		var container = options.legend.canvas.container;
-		if(container){
-			isExternalLegend = true;
-			if(!container.is('canvas')){
-				container = $('<canvas/>').insertAfter(container);
-			}
-			legendCtx = $(container)[0].getContext('2d');
-		}else{
-			isExternalLegend = false;
-			container = placeholder.find('.legend');
-			legendCtx = plotCtx;
-		}
+		
+		var containerOption = options.legend.canvas.container;
+		var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
+                var container = containerAndContext.container;
+                //the legendCtx will either be plotCtx or the context from an external canvas,
+                //depending on what is contained in canvas.container
+                var legendCtx = containerAndContext.context;
+                var isExternalLegend = legendCtx === plotCtx ? false : true;
 
 		var series = plot.getData();
 		var plotOffset = plot.getPlotOffset();
 		var plotHeight = plot.height();
 		var plotWidth = plot.width();
 		
-		var sortedSeries;
-		var sortedOption = options.legend.canvas.sorted; 
-		if(sortedOption){
-			if(true === sortedOption || 'ascending' === sortedOption){
-				sortedSeries = series.sort(ascendingAlphabeticalSort);
-			}
-			else if ('descending' === sortedOption){
-				sortedSeries = series.sort(ascendingAlphabeticalSort).reverse();
-			}
-			else if('reverse' === sortedOption){
-				sortedSeries = series.reverse();
-			}
-			else if ('function' === typeof sortedOption){
-				sortedSeries = series.sort(sortedOption);
-			}
-			else{
-				throw Error('Unrecognized value for "sorted" option: ' + sortedOption);
-			}
-		}else{
-			sortedSeries = series;
-		}
+		var sortedSeries = getSortedSeries(options.legend.canvas.sorted, series);
 		
 //		calculateLegendSize
   		var entrySize = options.legend.canvas.entrySize;
@@ -370,7 +390,11 @@
 	$.plot.plugins.push({
 		init: init,
 		options: {},
-		name: 'legendoncanvas',
-		version: '1.0'
+		name: 'custom-canvas-legend',
+		version: '0.1',
+                _private_methods:{
+                    calculateLegendOrigin: calculateLegendOrigin,
+                    getFontOptions: getFontOptions,
+                }
 	});
 })(jQuery);
