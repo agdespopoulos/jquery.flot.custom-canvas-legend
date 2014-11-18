@@ -87,7 +87,6 @@
         </dependencies>
     
     <build>
-        <pluginManagement>
             <plugins>                   
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -145,13 +144,12 @@
                         <sourceIncludes>
                             <!--library dependencies -->
                             <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
-                            <include>${webjars.libs}/flot/${flot.version}/flot.js</include>
+                            <include>${webjars.libs}/flot/${flot.version}/jquery.flot.js</include>
                             <!-- main app-->
-                            <include>jquery.flot.custom-canvas-legend.js</include>
+                            <include>src/main/resources/jquery.flot.custom-canvas-legend.js</include>
                         </sourceIncludes>
                     </configuration>
                 </plugin>
             </plugins>
-        </pluginManagement>
     </build>
 </project>
