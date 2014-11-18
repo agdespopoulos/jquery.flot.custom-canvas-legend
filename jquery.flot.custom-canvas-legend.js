@@ -1,0 +1,1 @@
+src/main/resources/jquery.flot.custom-canvas-legend.js

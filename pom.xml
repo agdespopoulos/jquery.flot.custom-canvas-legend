@@ -4,7 +4,7 @@
     <groupId>gov.usgs.cida.jquery.flot</groupId>
     <artifactId>custom-canvas-legend</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
     <organization>
         <name>Center for Integrated Data Analytics</name>
         <url>http://cida.usgs.gov</url>
@@ -72,12 +72,12 @@
         <flot.version>0.8.3</flot.version>
     </properties>
     
-    <dependencyManagement>
+
         <dependencies>
             <dependency>
                 <groupId>org.webjars</groupId>
                 <artifactId>jquery</artifactId>
-                <version>{$jquery.version}-1</version>
+                <version>${jquery.version}-1</version>
             </dependency>
             <dependency>
                 <groupId>org.webjars</groupId>
@@ -85,11 +85,26 @@
                 <version>${flot.version}</version>            
             </dependency>
         </dependencies>
-    </dependencyManagement>
     
     <build>
         <pluginManagement>
             <plugins>
+<!--                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                    <executions>
+                        <execution>
+                            <id>copy js</id>
+                            <goals>
+                                <goal>resources</goal>
+                            </goals>
+                            <configuration>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>-->
+                    
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
@@ -142,14 +157,13 @@
                             <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
                         </webDriverCapabilities>
                         <jsSrcDir>${basedir}</jsSrcDir>
-                        <jsTestSrcDir>${basedir}/src/test/javascript/specs</jsTestSrcDir>
+                        <jsTestSrcDir>${basedir}/src/test/resources/specs</jsTestSrcDir>
                         <sourceIncludes>
                             <!--library dependencies -->
                             <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
-                            
+                            <include>${webjars.libs}/flot/${flot.version}/flot.js</include>
                             <!-- main app-->
-                            <include>src/main/webapp/</include>
-                                            
+                            <include>jquery.flot.custom-canvas-legend.js</include>
                         </sourceIncludes>
                     </configuration>
                 </plugin>
