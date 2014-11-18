@@ -93,7 +93,7 @@
         var LEGEND_BOX_LINE_HEIGHT = 18;
     }
     function ascendingAlphabeticalSort(seriesA, seriesB) {
-        return seriesA.text > seriesB.text;
+        return seriesA.label > seriesB.label;
     }
     function getFontOptions(placeholder) {
         return {
@@ -428,4 +428,18 @@
             getLegendSize: getLegendSize
         }
     });
+    
+//    $.plot.custom_canvas_legend = {
+//        entryLayout : {
+//            vertical : function(){
+//                
+//            }
+//        },
+//        entrySize : {
+//            default: function(){
+//                    
+//            }
+//        }
+//    };
+    
 })(jQuery);
