@@ -1,3 +1,4 @@
+/* global jQuery Math */
 //based on https://raw.githubusercontent.com/lukesampson/flot/5922045d8bc233073ef3d102703aa74a037c7e54/jquery.flot.legendoncanvas.js
 /**
  * user specifies canvas legend configuration by modifying the legend.canvas options object
@@ -244,7 +245,7 @@
         var legendOrigin, legendOriginX, legendOriginY;
 
         if (options.legend.canvas.position && !options.legend.canvas.container) {
-            legendOrigin = calculateLegendOrigin(options.legend.canvas.position, options.legend.canvas.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight);
+            legendOrigin = calculateLegendOrigin(options.legend.canvas.position, options.legend.canvas.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
             legendOriginX = legendOrigin.x;
             legendOriginY = legendOrigin.y;
         }
@@ -363,10 +364,13 @@
      * @param borderWidth {Number}
      * @param legendWidth {Number}
      * @param legendHeight {Number}
+     * @param plotWidth {Number}
+     * @param plotHeight {Number}
      * @returns {x: Number, y:Number}
      */
-    function calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight) {
-        if (margin[0] === null)
+    function calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight) {
+        var x,y;
+        if (margin[0] == null)
             margin = [margin, margin];
         if (position.charAt(0) === "n") {
             y = Math.round(plotOffset.top + borderWidth + margin[1]);
