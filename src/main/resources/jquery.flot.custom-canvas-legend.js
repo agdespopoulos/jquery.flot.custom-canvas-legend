@@ -116,7 +116,7 @@
             }
             finalContext = $(container)[0].getContext('2d');
         } else {
-            container = placeholder.find('.legend');
+            finalContainer = placeholder.find('.legend');
             finalContext = plotContext;
         }
         return {
@@ -263,7 +263,7 @@
 
         //render background
         legendCtx.globalAlpha = options.legend.backgroundOpacity;
-        legendCtx.fillStyle = options.legend.canvas.backgroundColor;
+        legendCtx.fillStyle = options.legend.canvas.backgroundColor || '#fff';
         legendCtx.fillRect(legendOriginX, legendOriginY, legendWidth, legendHeight);
 
         //restore previous context state
@@ -291,7 +291,7 @@
             nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
 
             entryRender(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
-            thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
+            thisEntrySize = 'function' === typeof entrySize ? entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) : entrySize;
             entryWidth = thisEntrySize.entryWidth;
             entryHeight = thisEntrySize.entryHeight;
             previousEntryOriginX = nextEntryOriginX;

@@ -116,15 +116,16 @@ $(document).ready(function () {
                 });
            });
         });
-        describe('tests that need canvas', function () {
-            var legendContainer, plotContainer, data, options;
-            beforeEach(function () {
+        describe('tests that need the dom', function () {
+            var legendContainer, plotContainer, series, options;
+            var setupDom = function () {
                 plotContainer = $('<div></div>').css({
                     'height': '300px',
                     'width': '100%'
                 });
 
                 legendContainer = $('<canvas/>');
+                $('body').append('<h2>' + this.description + '</h2>');
                 $('body').append(plotContainer);
                 $('body').append(legendContainer);
                 var d1 = [];
@@ -137,28 +138,44 @@ $(document).ready(function () {
                 // A null signifies separate line segments
 
                 var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
-                data = [d1, d2, d3];
+                series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
                 options = {
                     legend: {
                         canvas: {
+                            show: true,
+                            entrySize : {
+                                entryHeight: 40,
+                                entryWidth: 100
+                            },
+                            position: 'se',
+                            entryLayout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+                                return {
+                                    nextEntryOriginX: previousEntryOriginX,
+                                    nextEntryOriginY: previousEntryOriginY + previousEntryHeight
+                                };
+                            },
+                            margin: 0
                         }
                     }
                 };
-                $.plot(plotContainer, data, options);
-            });
+            };
+            
 
-            describe('drawing legend on canvas', function () {
-                it('should draw the legend on canvas', function () {
-//                    expect(true).toBe(false);
+            describe('getLegendContainerAndContext', function () {
+                beforeEach(setupDom);
+                
+                it('if "container" is falsy, should return plotContext as "context", and a div of class "legend" as "container"', function () {
+                    var plot = $.plot(plotContainer, series, options);
+                    var plotContext = plot.getCanvas().getContext('2d');
+                    var placeholder = plot.getPlaceholder();
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(undefined, placeholder, plotContext);
+                    var newContainer = containerAndContext.container;
+                    var newContext = containerAndContext.context;
+                    expect(newContext).toBe(plotContext);
+                    expect(newContainer.is('div')).toBe(true);
+                    expect(newContainer.hasClass('legend')).toBe(true);
                 });
             });
-
-            afterEach(function () {
-                plotContainer.remove();
-                legendContainer.remove();
-            });
-        });
-
-
-    });
-});
+        });//tests that need canvas
+    });//root describe block
+});//document ready
