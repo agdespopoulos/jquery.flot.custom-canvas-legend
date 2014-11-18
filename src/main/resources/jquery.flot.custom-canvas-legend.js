@@ -145,59 +145,32 @@
             }
             return sortedSeries;
         }
-        function getLegendSize(entrySize, entryLayout){
-            
-        }
-	// draws the legend on the canvas, using the HTML added by flot as a guide
-	function drawLegend(plot, plotCtx) {
-		var options = plot.getOptions();
-		if(!(options.legend.canvas && options.legend.canvas.show)) return;
-
-		var placeholder = plot.getPlaceholder();
-		var fontOptions = getFontOptions(placeholder);
-		var entryRender = options.legend.canvas.entryRender || defaultRender;
-		var entryLayout = options.legend.canvas.entryLayout || defaultLayout;
-		
-		var containerOption = options.legend.canvas.container;
-		var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
-                var container = containerAndContext.container;
-                //the legendCtx will either be plotCtx or the context from an external canvas,
-                //depending on what is contained in canvas.container
-                var legendCtx = containerAndContext.context;
-                var isExternalLegend = legendCtx === plotCtx ? false : true;
-
-		var series = plot.getData();
-		var plotOffset = plot.getPlotOffset();
-		var plotHeight = plot.height();
-		var plotWidth = plot.width();
-		
-		var sortedSeries = getSortedSeries(options.legend.canvas.sorted, series);
-		
-//		calculateLegendSize
-  		var entrySize = options.legend.canvas.entrySize;
+        function getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions){
   		var seriesIndex;
 		var legendWidth = 0;
 		var legendHeight = 0;
 		var previousEntryOriginX = 0,
-  			previousEntryOriginY = 0,
-  			previousEntryWidth = 0,		
-  			previousEntryHeight = 0,
-  			nextEntryOrigin,
-  			nextEntryOriginX,
-  			nextEntryOriginY,
-  			entryWidth,
-  			entryHeight,
-                        potentialXExtremity,
-                        potentialYExtremity,
-  			thisEntrySize;
+                    previousEntryOriginY = 0,
+                    previousEntryWidth = 0,		
+                    previousEntryHeight = 0,
+                    nextEntryOrigin,
+                    nextEntryOriginX,
+                    nextEntryOriginY,
+                    entryWidth,
+                    entryHeight,
+                    potentialXExtremity,
+                    potentialYExtremity,
+                    thisEntrySize,
+                    thisSeries;
   		
 		if ('function' === typeof entrySize){
 
   			for(seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++){
-				nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                                thisSeries = sortedSeries[seriesIndex];
+  				nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
 				nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
 				nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
-				thisEntrySize = entrySize(legendCtx, series, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
+				thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
 				entryWidth = thisEntrySize.entryWidth;
 				entryHeight = thisEntrySize.entryHeight;
 				potentialXExtremity = nextEntryOriginX + entryWidth;
@@ -228,6 +201,44 @@
 		else{
 			throw Error('Unrecognized value for "entrySize" option: ' + entrySize);
 		}
+                return {
+                    height : legendHeight,
+                    width: legendWidth
+                };
+        }
+	// draws the legend on the canvas, using the HTML added by flot as a guide
+	function drawLegend(plot, plotCtx) {
+		var options = plot.getOptions();
+		if(!(options.legend.canvas && options.legend.canvas.show)) return;
+
+		var placeholder = plot.getPlaceholder();
+		var fontOptions = getFontOptions(placeholder);
+		var entryRender = options.legend.canvas.entryRender || defaultRender;
+		var entryLayout = options.legend.canvas.entryLayout || defaultLayout;
+		
+		var containerOption = options.legend.canvas.container;
+		var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
+                var container = containerAndContext.container;
+                //the legendCtx will either be plotCtx or the context from an external canvas,
+                //depending on what is contained in canvas.container
+                var legendCtx = containerAndContext.context;
+                var isExternalLegend = legendCtx === plotCtx ? false : true;
+
+		var series = plot.getData();
+		var plotOffset = plot.getPlotOffset();
+		var plotHeight = plot.height();
+		var plotWidth = plot.width();
+		
+		var sortedSeries = getSortedSeries(options.legend.canvas.sorted, series);
+                
+                var entrySize = options.legend.canvas.entrySize;
+                var entryLayout = options.legend.canvas.entryLayout;
+                
+		var legendSize = getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions);
+                
+                var legendWidth = legendSize.width;
+                var legendHeight = legendSize.height;
+ 		
 		
 		var legendOrigin, legendOriginX, legendOriginY;
 		
@@ -257,18 +268,27 @@
 		legendCtx.fillStyle = oldFillStyle;
 		
 		//now do actual rendering of legend entries
-	  	previousEntryOriginX = 0;
-	  	previousEntryOriginY = 0;
-	  	previousEntryWidth = 0;		
-	  	previousEntryHeight = 0;
+	  	var previousEntryOriginX = 0,
+                    previousEntryOriginY = 0,
+                    previousEntryWidth = 0,	
+                    previousEntryHeight = 0,
+                    nextEntryOrigin,
+                    nextEntryOriginX,
+                    nextEntryOriginY,
+                    seriesIndex,
+                    thisSeries,
+                    thisEntrySize,
+                    entryWidth,
+                    entryHeight;
 		  	
 	  	for(seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++){
+                        thisSeries = sortedSeries[seriesIndex];
 	  		nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
 	  		nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
 	  		nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
 	  		
-	  		entryRender(legendCtx, series, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
-  			thisEntrySize = entrySize(legendCtx, series, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
+	  		entryRender(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
+  			thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
 	  		entryWidth = thisEntrySize.entryWidth;
 	  		entryHeight = thisEntrySize.entryHeight;
 	  		previousEntryOriginX = nextEntryOriginX;
@@ -395,6 +415,9 @@
                 _private_methods:{
                     calculateLegendOrigin: calculateLegendOrigin,
                     getFontOptions: getFontOptions,
+                    getSortedSeries: getSortedSeries,
+                    getLegendContainerAndContext: getLegendContainerAndContext,
+                    getLegendSize: getLegendSize
                 }
 	});
 })(jQuery);
