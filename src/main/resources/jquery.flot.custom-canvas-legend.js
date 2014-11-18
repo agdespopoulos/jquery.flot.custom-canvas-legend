@@ -93,7 +93,8 @@
         var LEGEND_BOX_LINE_HEIGHT = 18;
     }
     function ascendingAlphabeticalSort(seriesA, seriesB) {
-        return seriesA.label > seriesB.label;
+        var value = seriesA.label > seriesB.label ? 1 : -1;
+        return value;
     }
     function getFontOptions(placeholder) {
         return {
