@@ -2,7 +2,7 @@
 $(document).ready(function () {
 
     describe('jquery.flot.custom-canvas-legend.layouts.js', function () {
-
+        
         var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
         //get a reference to the plugin's private methods
         for (var i = 0; i < $.plot.plugins.length; i++) {
@@ -14,10 +14,13 @@ $(document).ready(function () {
         }
         var pluginMethods = customCanvasLegend._private_methods;
 
+
+        var legendContainer, plotContainer, series, options;
         var setupDom = function () {
             plotContainer = $('<div></div>').css({
                 'height': '300px',
-                'width': '500px'
+                'width': '500px',
+                'display': 'inline-block'
             });
 
             legendContainer = $('<canvas/>').css({
@@ -42,19 +45,15 @@ $(document).ready(function () {
             series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
             options = {
                 legend: {
-                    canvas: {
+                    show: false,
+                },
+                canvasLegend: {
                         show: true,
                         entrySize: {
-                            height: 40,
-                            width: 100
+                            height: 50,
+                            width: 50
                         },
-                        position: 'se',
-                        layout: function (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight) {
-                            return {
-                                nextEntryOriginX: previousEntryOriginX,
-                                nextEntryOriginY: previousEntryOriginY + previousEntryHeight
-                            };
-                        },
+                        container: legendContainer,
                         entryRender: function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) {
                             legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
                             legendCtx.fillStyle = thisSeries.color;
@@ -64,11 +63,34 @@ $(document).ready(function () {
                             legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
                         },
                         margin: 0
-                    }
                 }
             };
         };
         beforeEach(setupDom);
-
+        it('should lay out horizontally', function(){
+            var horizontal = $.plot.custom_canvas_legend.layouts.horizontal;
+            var previousEntryOriginX = 0,
+                previousEntryOriginY = 0,
+                previousEntryWidth = 10,
+                previousEntryHeight = 20;
+            var nextEntryOrigin = horizontal(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX + previousEntryWidth);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            //plot it for show
+            options.canvasLegend.layout = horizontal;
+            var plot = $.plot(plotContainer, series, options);
+        });
+        it('should lay out vertically', function(){
+            var vertical = $.plot.custom_canvas_legend.layouts.vertical;
+            var previousEntryOriginX = 0,
+                previousEntryOriginY = 0,
+                previousEntryWidth = 42,
+                previousEntryHeight = 92;
+            var nextEntryOrigin = vertical(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + previousEntryHeight);
+            options.canvasLegend.layout = vertical;
+            var plot = $.plot(plotContainer, series, options);
+        });
     });//root describe block
 });//document ready

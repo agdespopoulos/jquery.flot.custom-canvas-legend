@@ -147,6 +147,7 @@
                             <include>${webjars.libs}/flot/${flot.version}/jquery.flot.js</include>
                             <!-- main app-->
                             <include>src/main/resources/jquery.flot.custom-canvas-legend.js</include>
+                            <include>src/main/resources/jquery.flot.custom-canvas-legend.layouts.js</include>
                         </sourceIncludes>
                     </configuration>
                 </plugin>

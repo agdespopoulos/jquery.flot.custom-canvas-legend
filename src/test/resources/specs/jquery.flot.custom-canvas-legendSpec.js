@@ -164,29 +164,30 @@ $(document).ready(function () {
                 series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
                 options = {
                     legend: {
-                        canvas: {
-                            show: true,
-                            entrySize : {
-                                height: 40,
-                                width: 100
-                            },
-                            position: 'se',
-                            layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
-                                return {
-                                    nextEntryOriginX: previousEntryOriginX,
-                                    nextEntryOriginY: previousEntryOriginY + previousEntryHeight
-                                };
-                            },
-                            entryRender: function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
-                                legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
-                                legendCtx.fillStyle = thisSeries.color;
-                                var charHeight = legendCtx.measureText('M').width;
-                                legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, charHeight, legendCtx.measureText(thisSeries.label).width);
-                                legendCtx.fillStyle = "#000";
-                                legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
-                            },
-                            margin: 0
-                        }
+                        show: false,
+                    },
+                    canvasLegend: {
+                        show: true,
+                        entrySize : {
+                            height: 40,
+                            width: 100
+                        },
+                        position: 'se',
+                        layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+                            return {
+                                nextEntryOriginX: previousEntryOriginX,
+                                nextEntryOriginY: previousEntryOriginY + previousEntryHeight
+                            };
+                        },
+                        entryRender: function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
+                            legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
+                            legendCtx.fillStyle = thisSeries.color;
+                            var charHeight = legendCtx.measureText('M').width;
+                            legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, charHeight, legendCtx.measureText(thisSeries.label).width);
+                            legendCtx.fillStyle = "#000";
+                            legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
+                        },
+                        margin: 0
                     }
                 };
             };
@@ -195,20 +196,20 @@ $(document).ready(function () {
             describe('getLegendContainerAndContext', function () {
                 beforeEach(setupDom);
                 
-                it('if "container" is falsy, should return plotContext as "context", and a div of class "legend" as "container"', function () {
+                it('if "container" is falsy, should return plotContext as "context", and the plot\'s canvas wrapped in jQuery as "container"', function () {
                     var plot = $.plot(plotContainer, series, options);
-                    var plotContext = plot.getCanvas().getContext('2d');
+                    var plotCanvas = plot.getCanvas();
+                    var plotContext = plotCanvas.getContext('2d');
                     var placeholder = plot.getPlaceholder();
                     var containerAndContext = pluginMethods.getLegendContainerAndContext(undefined, placeholder, plotContext);
                     var newContainer = containerAndContext.container;
                     var newContext = containerAndContext.context;
                     expect(newContext).toBe(plotContext);
-                    expect(newContainer.is('div')).toBe(true);
-                    expect(newContainer.hasClass('legend')).toBe(true);
+                    expect(newContainer[0]).toBe(plotCanvas);
                 });
                 it('if "container" is a jQuery-wrapped canvas, it should return the canvas\' 2d context as "context" and the same jquery-wrapped canvas as "container"', function(){
                     legendContainer.css('display', '');
-                    options.legend.canvas.container = legendContainer;
+                    options.canvasLegend.container = legendContainer;
                     var legendContext = legendContainer[0].getContext('2d');
                     var plot = $.plot(plotContainer, series, options);
                     var plotContext = plot.getCanvas().getContext('2d');
@@ -226,7 +227,7 @@ $(document).ready(function () {
                 it('if "container" is a non-canvas jQuery-wrapped element, it should create a canvas inside of "container", it should return the new canvas\' 2d context as "context" and the newly-created canvas as "container"', function(){
                     legendContainer = $('<div></div>');
                     legendContainer.insertAfter(plotContainer);
-                    options.legend.canvas.container = legendContainer;
+                    options.canvasLegend.container = legendContainer;
                     var plot = $.plot(plotContainer, series, options);
                     var plotContext = plot.getCanvas().getContext('2d');
                     var placeholder = plot.getPlaceholder();
@@ -271,15 +272,15 @@ $(document).ready(function () {
                     var plot = $.plot(plotContainer, series, options);
                     var legendCtx = plot.getCanvas().getContext('2d');
                     var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
-                    var size = pluginMethods.getLegendSize(options.legend.canvas.entrySize, options.legend.canvas.layout, series, legendCtx, options, fontOptions);
-                    expect(size.width).toBe(options.legend.canvas.entrySize.width);
-                    expect(size.height).toBe(options.legend.canvas.entrySize.height*series.length);
+                    var size = pluginMethods.getLegendSize(options.canvasLegend.entrySize, options.canvasLegend.layout, series, legendCtx, options, fontOptions);
+                    expect(size.width).toBe(options.canvasLegend.entrySize.width);
+                    expect(size.height).toBe(options.canvasLegend.entrySize.height*series.length);
                 });
                 it('should get the correct size given a dynamic entry size function', function(){ 
                     var entryWidth = 200,
                         entryHeight = 50;
                         
-                    options.legend.canvas.entrySize = function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
+                    options.canvasLegend.entrySize = function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
                         var label = thisSeries.label;
                         var textWidth = legendCtx.measureText(label).width;
                         
@@ -297,7 +298,7 @@ $(document).ready(function () {
                     var plot = $.plot(plotContainer, series, options);
                     var legendCtx = plot.getCanvas().getContext('2d');
                     var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
-                    var size = pluginMethods.getLegendSize(options.legend.canvas.entrySize, options.legend.canvas.layout, series, legendCtx, options, fontOptions);
+                    var size = pluginMethods.getLegendSize(options.canvasLegend.entrySize, options.canvasLegend.layout, series, legendCtx, options, fontOptions);
                     expect(size.width).toBe(legendCtx.measureText('d3').width);
                     expect(size.height).toBe(legendCtx.measureText('M').width * series.length);
                 });

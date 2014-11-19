@@ -1,13 +1,12 @@
 /* global jQuery Math */
 //based on https://raw.githubusercontent.com/lukesampson/flot/5922045d8bc233073ef3d102703aa74a037c7e54/jquery.flot.legendoncanvas.js
 /**
- * user specifies canvas legend configuration by modifying the legend.canvas options object
+ * user specifies canvas legend configuration by modifying the canvasLegend options object
  * {
  * .
  * .
  * .
- * legend:{
- * 		canvas: {
+ * canvasLegend: {
  * 			show: optional boolean, defaulting to true
  * 			position: "ne" or "nw" or "se" or "sw". Ignored if "container" option is specified.
  * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->{width:Number, height:Number}).
@@ -33,8 +32,8 @@
  * }
  * 
  * example:
- * legend:{
- * 		canvas: {
+ * 
+ *      canvasLegend: {
  * 			show: true,
  * 			entrySize: function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions){
  * 					//assume constant symbol width and height
@@ -120,7 +119,7 @@
             }
             finalContext = $(finalContainer)[0].getContext('2d');
         } else {
-            finalContainer = placeholder.find('.legend');
+            finalContainer = $(plotContext.canvas);
             finalContext = plotContext;
         }
         return {
@@ -234,15 +233,15 @@
     // draws the legend on the canvas, using the HTML added by flot as a guide
     function drawLegend(plot, plotCtx) {
         var options = plot.getOptions();
-        if (!(options.legend.canvas && options.legend.canvas.show)){
+        if (!(options.canvasLegend && options.canvasLegend.show)){
             return;
         }
         var placeholder = plot.getPlaceholder();
         var fontOptions = getFontOptions(placeholder);
-        var entryRender = options.legend.canvas.entryRender || defaultRender;
-        var layout = options.legend.canvas.layout || defaultLayout;
+        var entryRender = options.canvasLegend.entryRender || defaultRender;
+        var layout = options.canvasLegend.layout || defaultLayout;
 
-        var containerOption = options.legend.canvas.container;
+        var containerOption = options.canvasLegend.container;
         var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
         var container = containerAndContext.container;
         //the legendCtx will either be plotCtx or the context from an external canvas,
@@ -255,10 +254,10 @@
         var plotHeight = plot.height();
         var plotWidth = plot.width();
 
-        var sortedSeries = getSortedSeries(options.legend.canvas.sorted, series);
+        var sortedSeries = getSortedSeries(options.canvasLegend.sorted, series);
 
-        var entrySize = options.legend.canvas.entrySize;
-        var layout = options.legend.canvas.layout;
+        var entrySize = options.canvasLegend.entrySize;
+        var layout = options.canvasLegend.layout;
 
         var legendSize = getLegendSize(entrySize, layout, sortedSeries, legendCtx, options, fontOptions);
 
@@ -268,8 +267,8 @@
 
         var legendOrigin, legendOriginX, legendOriginY;
 
-        if (options.legend.canvas.position && !options.legend.canvas.container) {
-            legendOrigin = calculateLegendOrigin(options.legend.canvas.position, options.legend.canvas.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
+        if (options.canvasLegend.position && !options.canvasLegend.container) {
+            legendOrigin = calculateLegendOrigin(options.canvasLegend.position, options.canvasLegend.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
             legendOriginX = legendOrigin.x;
             legendOriginY = legendOrigin.y;
         }
@@ -286,7 +285,7 @@
 
         //render background
         legendCtx.globalAlpha = options.legend.backgroundOpacity;
-        legendCtx.fillStyle = options.legend.canvas.backgroundColor || '#fff';
+        legendCtx.fillStyle = options.canvasLegend.backgroundColor || '#fff';
         legendCtx.fillRect(legendOriginX, legendOriginY, legendWidth, legendHeight);
 
         //restore previous context state
