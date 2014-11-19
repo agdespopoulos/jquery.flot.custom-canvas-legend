@@ -21,10 +21,12 @@
  * 
  *   				Legend entries appear in the same order as their series by default. If "sorted" is "reverse" then they appear in the opposite order from their series. To sort them alphabetically, you can specify true, "ascending" or "descending", where true and "ascending" are equivalent.
  *   
- * 			entryLayout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
+ * 			layout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
  * 					If null, a vertical layout will be used. If a function, the resulting object's properties will be passed as entryOriginX and entryOriginY to the "render" function.
  * 			background: optional String color or (function(legendCtx, legendOriginX, legendOriginY, legendWidth, legendHeight)), defaulting to white.
  * 			entryRender: optional (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->undefined), or null, defaulting to null.
+ * 					If a function, the function is called to perform custom rendering of the legend entry for each series. 
+ * 					The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
  * 					If null, a box matching the color of the series is drawn to the left of the series text in 13 pt font.
  * 			
  * 		}
@@ -56,7 +58,7 @@
  *					return -1; 
  * 				}
  * 			}		  
- * 			entryLayout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+ * 			layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
  *				 //simple vertical layout
  *				var nextEntryOriginY = previousEntryOriginY + previousEntryHeight; 
  * 				return {nextEntryOriginX: previousEntryOriginX, nextEntryOriginY: Number};
@@ -149,7 +151,7 @@
         }
         return sortedSeries;
     }
-    function getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions) {
+    function getLegendSize(entrySize, layout, sortedSeries, legendCtx, options, fontOptions) {
         var seriesIndex;
         var legendWidth = 0;
         var legendHeight = 0;
@@ -171,7 +173,7 @@
 
             for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
                 thisSeries = sortedSeries[seriesIndex];
-                nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
                 thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
@@ -191,7 +193,7 @@
             for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
                 entryWidth = entrySize.width;
                 entryHeight = entrySize.height;
-                nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, entryWidth, entryHeight);
+                nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, entryWidth, entryHeight);
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
                 potentialXExtremity = nextEntryOriginX + entryWidth;
@@ -221,7 +223,7 @@
         var placeholder = plot.getPlaceholder();
         var fontOptions = getFontOptions(placeholder);
         var entryRender = options.legend.canvas.entryRender || defaultRender;
-        var entryLayout = options.legend.canvas.entryLayout || defaultLayout;
+        var layout = options.legend.canvas.layout || defaultLayout;
 
         var containerOption = options.legend.canvas.container;
         var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
@@ -239,9 +241,9 @@
         var sortedSeries = getSortedSeries(options.legend.canvas.sorted, series);
 
         var entrySize = options.legend.canvas.entrySize;
-        var entryLayout = options.legend.canvas.entryLayout;
+        var layout = options.legend.canvas.layout;
 
-        var legendSize = getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions);
+        var legendSize = getLegendSize(entrySize, layout, sortedSeries, legendCtx, options, fontOptions);
 
         var legendWidth = legendSize.width;
         var legendHeight = legendSize.height;
@@ -290,7 +292,7 @@
 
         for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
             thisSeries = sortedSeries[seriesIndex];
-            nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+            nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
             nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
             nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
 
@@ -435,7 +437,7 @@
     });
     
 //    $.plot.custom_canvas_legend = {
-//        entryLayout : {
+//        layout : {
 //            vertical : function(){
 //                
 //            }
