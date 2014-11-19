@@ -61,7 +61,7 @@
  * 			layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
  *				 //simple vertical layout
  *				var nextEntryOriginY = previousEntryOriginY + previousEntryHeight; 
- * 				return {nextEntryOriginX: previousEntryOriginX, nextEntryOriginY: Number};
+ * 				return {nextEntryOriginX: previousEntryOriginX, nextEntryOriginY: nextEntryOriginY};
  * 			}
  * 			entryRender: function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions){
  *				legendCtx.fillStyle = series.someProperty.indicating.theSeries.color;
@@ -173,7 +173,16 @@
 
             for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
                 thisSeries = sortedSeries[seriesIndex];
-                nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                if(0 === seriesIndex){
+                    nextEntryOrigin = {
+                        nextEntryOriginX : previousEntryOriginX,
+                        nextEntryOriginY : previousEntryOriginY,
+                    };
+                }
+                else{
+                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                }
+                
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
                 thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
@@ -193,7 +202,15 @@
             for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
                 entryWidth = entrySize.width;
                 entryHeight = entrySize.height;
-                nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, entryWidth, entryHeight);
+                if(0 === seriesIndex){
+                    nextEntryOrigin = {
+                        nextEntryOriginX : previousEntryOriginX,
+                        nextEntryOriginY : previousEntryOriginY,
+                    };
+                }
+                else{
+                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                }
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
                 potentialXExtremity = nextEntryOriginX + entryWidth;

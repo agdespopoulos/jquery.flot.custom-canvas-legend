@@ -172,17 +172,10 @@ $(document).ready(function () {
                             },
                             position: 'se',
                             layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
-                                if(0 === seriesIndex){
-                                    return {
-                                        nextEntryOriginX: previousEntryOriginX,
-                                        nextEntryOriginY: previousEntryOriginY
-                                    };
-                                }else{
-                                    return {
-                                        nextEntryOriginX: previousEntryOriginX,
-                                        nextEntryOriginY: previousEntryOriginY + previousEntryHeight
-                                    };
-                                }
+                                return {
+                                    nextEntryOriginX: previousEntryOriginX,
+                                    nextEntryOriginY: previousEntryOriginY + previousEntryHeight
+                                };
                             },
                             entryRender: function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
                                 legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
