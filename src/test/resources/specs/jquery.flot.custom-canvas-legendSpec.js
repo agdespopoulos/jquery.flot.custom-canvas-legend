@@ -242,8 +242,12 @@ $(document).ready(function () {
                     options.legend.canvas.entrySize = function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
                         var label = thisSeries.label;
                         var textWidth = legendCtx.measureText(label).width;
+                        
                         //width of 'M' considered good approximation for height of tallest letter
                         //http://stackoverflow.com/a/13318387
+                        //someday this hack won't be necessary when browsers implement the
+                        //TextMetrics spec: https://developer.mozilla.org/en-US/docs/Web/API/TextMetrics
+                        
                         var textHeight = legendCtx.measureText('M').width;
                         return {
                             entryWidth: textWidth,
