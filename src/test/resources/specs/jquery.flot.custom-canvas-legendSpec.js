@@ -144,7 +144,7 @@ $(document).ready(function () {
 
                 legendContainer = $('<canvas/>').css({
                     'height': '300px',
-                    'width': '100px',
+                    'width': '300px',
                     'display': 'none'
                 });
                 $('body').append('<h2>' + this.description + '</h2>');
@@ -214,7 +214,7 @@ $(document).ready(function () {
                     expect(newContainer.hasClass('legend')).toBe(true);
                 });
                 it('if "container" is a jQuery-wrapped canvas, it should return the canvas\' 2d context as "context" and the same jquery-wrapped canvas as "container"', function(){
-                    legendContainer.css('display', 'block');
+                    legendContainer.css('display', '');
                     options.legend.canvas.container = legendContainer;
                     var legendContext = legendContainer[0].getContext('2d');
                     var plot = $.plot(plotContainer, series, options);
@@ -229,6 +229,22 @@ $(document).ready(function () {
                     expect(newContainer.is('canvas')).toBe(true);
                     expect(newContainer).toBe(legendContainer);
                     expect(newContainer.hasClass('legend')).toBe(false);
+                });
+                it('if "container" is a non-canvas jQuery-wrapped element, it should create a canvas inside of "container", it should return the new canvas\' 2d context as "context" and the newly-created canvas as "container"', function(){
+                    legendContainer = $('<div></div>');
+                    legendContainer.insertAfter(plotContainer);
+                    options.legend.canvas.container = legendContainer;
+                    var plot = $.plot(plotContainer, series, options);
+                    var plotContext = plot.getCanvas().getContext('2d');
+                    var placeholder = plot.getPlaceholder();
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, placeholder, plotContext);
+                    var newContainer = containerAndContext.container;
+                    var newContext = containerAndContext.context;
+                    expect(newContext).not.toBe(plotContext);
+                    expect(newContext instanceof CanvasRenderingContext2D).toBe(true);
+                    expect(newContainer.is('div')).toBe(false);
+                    expect(newContainer.is('canvas')).toBe(true);
+                    expect(newContainer.parent()[0]).toBe(legendContainer[0]);
                 });
             });
             describe('getFontOptions', function(){

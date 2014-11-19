@@ -112,9 +112,10 @@
                 finalContainer = container;
             }
             else {
-                finalContainer = $('<canvas/>').insertAfter(container);
+                finalContainer = $('<canvas/>');
+                container.append(finalContainer);
             }
-            finalContext = $(container)[0].getContext('2d');
+            finalContext = $(finalContainer)[0].getContext('2d');
         } else {
             finalContainer = placeholder.find('.legend');
             finalContext = plotContext;
