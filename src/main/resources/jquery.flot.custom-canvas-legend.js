@@ -10,7 +10,7 @@
  * 		canvas: {
  * 			show: optional boolean, defaulting to true
  * 			position: "ne" or "nw" or "se" or "sw". Ignored if "container" option is specified.
- * 			entrySize: {entryHeight: Number, entryWidth: Number} or (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->{entryWidth:Number, entryHeight:Number}).
+ * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->{width:Number, height:Number}).
  * 					If a function, the function is called on each entry. The plugin uses this information to calculate the width of the overall legend.
  * 			margin: optional number of pixels or [x margin, y margin]. Ignored if "container" option is specified.
  * 			container: optional jQuery object wrapping a canvas element, or an actual canvas element, or null, defaulting to null.
@@ -40,11 +40,12 @@
  * 					var symbolHeight = 15;
  * 
  * 					var textWidth = legendCtx.measureText(label).width;
+ * 					var textHeight = legendCtx.meaureText('M').width;
  * 					var entryWidth = symbolWidth + textWidth;
- * 					var entryHeight = Math.max(symbolHeight, textWidth);
+ * 					var entryHeight = Math.max(symbolHeight, textHeight);
  * 
  * 					
- * 					return {entryWidth:entryWidth, entryHeight:entryHeight};
+ * 					return {width:entryWidth, height:entryHeight};
  * 				  },
  * 			container: $('#myCanvas'),
  * 			sorted: function(seriesA, seriesB){.
@@ -174,8 +175,8 @@
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
                 thisEntrySize = entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
-                entryWidth = thisEntrySize.entryWidth;
-                entryHeight = thisEntrySize.entryHeight;
+                entryWidth = thisEntrySize.width;
+                entryHeight = thisEntrySize.height;
                 potentialXExtremity = nextEntryOriginX + entryWidth;
                 potentialYExtremity = nextEntryOriginY + entryHeight;
                 legendWidth = potentialXExtremity > legendWidth ? potentialXExtremity : legendWidth;
@@ -186,13 +187,15 @@
                 previousEntryHeight = entryHeight;
             }
         }
-        else if ('number' === typeof entrySize.entryHeight && 'number' === typeof entrySize.entryWidth) {
+        else if ('number' === typeof entrySize.height && 'number' === typeof entrySize.width) {
             for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
-                nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, entrySize.entryWidth, entrySize.entryHeight);
+                entryWidth = entrySize.width;
+                entryHeight = entrySize.height;
+                nextEntryOrigin = entryLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, entryWidth, entryHeight);
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
-                potentialXExtremity = nextEntryOriginX + entrySize.entryWidth;
-                potentialYExtremity = nextEntryOriginY + entrySize.entryHeight;
+                potentialXExtremity = nextEntryOriginX + entryWidth;
+                potentialYExtremity = nextEntryOriginY + entryHeight;
                 legendWidth = potentialXExtremity > legendWidth ? potentialXExtremity : legendWidth;
                 legendHeight = potentialYExtremity > legendHeight ? potentialYExtremity : legendHeight;
                 previousEntryOriginX = nextEntryOriginX;
@@ -293,8 +296,8 @@
 
             entryRender(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
             thisEntrySize = 'function' === typeof entrySize ? entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) : entrySize;
-            entryWidth = thisEntrySize.entryWidth;
-            entryHeight = thisEntrySize.entryHeight;
+            entryWidth = thisEntrySize.width;
+            entryHeight = thisEntrySize.height;
             previousEntryOriginX = nextEntryOriginX;
             previousEntryOriginY = nextEntryOriginY;
             previousEntryWidth = entryWidth;

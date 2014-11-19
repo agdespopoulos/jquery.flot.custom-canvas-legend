@@ -167,8 +167,8 @@ $(document).ready(function () {
                         canvas: {
                             show: true,
                             entrySize : {
-                                entryHeight: 40,
-                                entryWidth: 100
+                                height: 40,
+                                width: 100
                             },
                             position: 'se',
                             entryLayout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
@@ -279,8 +279,8 @@ $(document).ready(function () {
                     var legendCtx = plot.getCanvas().getContext('2d');
                     var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
                     var size = pluginMethods.getLegendSize(options.legend.canvas.entrySize, options.legend.canvas.entryLayout, series, legendCtx, options, fontOptions);
-                    expect(size.width).toBe(options.legend.canvas.entrySize.entryWidth);
-                    expect(size.height).toBe(options.legend.canvas.entrySize.entryHeight*series.length);
+                    expect(size.width).toBe(options.legend.canvas.entrySize.width);
+                    expect(size.height).toBe(options.legend.canvas.entrySize.height*series.length);
                 });
                 it('should get the correct size given a dynamic entry size function', function(){ 
                     var entryWidth = 200,
@@ -297,8 +297,8 @@ $(document).ready(function () {
                         
                         var textHeight = legendCtx.measureText('M').width;
                         return {
-                            entryWidth: textWidth,
-                            entryHeight: textHeight
+                            width: textWidth,
+                            height: textHeight
                         };
                     };
                     var plot = $.plot(plotContainer, series, options);
