@@ -45,7 +45,7 @@ $(document).ready(function () {
             series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
             options = {
                 legend: {
-                    show: false,
+                    show: false
                 },
                 canvasLegend: {
                         show: true,
@@ -73,7 +73,7 @@ $(document).ready(function () {
                 previousEntryOriginY = 0,
                 previousEntryWidth = 10,
                 previousEntryHeight = 20;
-            var nextEntryOrigin = horizontal(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)
+            var nextEntryOrigin = horizontal(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
             expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX + previousEntryWidth);
             expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
             //plot it for show
@@ -86,9 +86,10 @@ $(document).ready(function () {
                 previousEntryOriginY = 0,
                 previousEntryWidth = 42,
                 previousEntryHeight = 92;
-            var nextEntryOrigin = vertical(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)
+            var nextEntryOrigin = vertical(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
             expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
             expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + previousEntryHeight);
+            //plot it for show
             options.canvasLegend.layout = vertical;
             var plot = $.plot(plotContainer, series, options);
         });
