@@ -167,10 +167,17 @@ $(document).ready(function () {
                             },
                             position: 'se',
                             entryLayout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
-                                return {
-                                    nextEntryOriginX: previousEntryOriginX,
-                                    nextEntryOriginY: previousEntryOriginY + previousEntryHeight
-                                };
+                                if(0 === seriesIndex){
+                                    return {
+                                        nextEntryOriginX: 0,
+                                        nextEntryOriginY: 0
+                                    };
+                                }else{
+                                    return {
+                                        nextEntryOriginX: previousEntryOriginX,
+                                        nextEntryOriginY: previousEntryOriginY + previousEntryHeight
+                                    };
+                                }
                             },
                             margin: 0
                         }
@@ -220,11 +227,37 @@ $(document).ready(function () {
             });
             describe('getLegendSize', function(){
                 beforeEach(setupDom);
-                it('should get the correct size', function(){ 
+                it('should get the correct size given a fixed entry size', function(){ 
                     var plot = $.plot(plotContainer, series, options);
-//                    pluginMethods.getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions);
+                    var legendCtx = plot.getCanvas().getContext('2d');
+                    var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
+                    var size = pluginMethods.getLegendSize(options.legend.canvas.entrySize, options.legend.canvas.entryLayout, series, legendCtx, options, fontOptions);
+                    expect(size.width).toBe(options.legend.canvas.entrySize.entryWidth);
+                    expect(size.height).toBe(options.legend.canvas.entrySize.entryHeight*series.length);
+                });
+                it('should get the correct size given a dynamic entry size function', function(){ 
+                    var entryWidth = 200,
+                        entryHeight = 50;
+                        
+                    options.legend.canvas.entrySize = function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
+                        var label = thisSeries.label;
+                        var textWidth = legendCtx.measureText(label).width;
+                        //width of 'M' considered good approximation for height of tallest letter
+                        //http://stackoverflow.com/a/13318387
+                        var textHeight = legendCtx.measureText('M').width;
+                        return {
+                            entryWidth: textWidth,
+                            entryHeight: textHeight
+                        };
+                    };
+                    var plot = $.plot(plotContainer, series, options);
+                    var legendCtx = plot.getCanvas().getContext('2d');
+                    var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
+                    var size = pluginMethods.getLegendSize(options.legend.canvas.entrySize, options.legend.canvas.entryLayout, series, legendCtx, options, fontOptions);
+                    expect(size.width).toBe(legendCtx.measureText('d3').width);
+                    expect(size.height).toBe(legendCtx.measureText('M').width * series.length);
                 });
             });
-        });//tests that need canvas
+        });//tests that need dom
     });//root describe block
 });//document ready
