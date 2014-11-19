@@ -139,10 +139,14 @@ $(document).ready(function () {
             var setupDom = function () {
                 plotContainer = $('<div></div>').css({
                     'height': '300px',
-                    'width': '100%'
+                    'width': '500px'
                 });
 
-                legendContainer = $('<canvas/>');
+                legendContainer = $('<canvas/>').css({
+                    'height': '300px',
+                    'width': '100px',
+                    'display': 'none'
+                });
                 $('body').append('<h2>' + this.description + '</h2>');
                 $('body').append(plotContainer);
                 $('body').append(legendContainer);
@@ -169,8 +173,8 @@ $(document).ready(function () {
                             entryLayout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
                                 if(0 === seriesIndex){
                                     return {
-                                        nextEntryOriginX: 0,
-                                        nextEntryOriginY: 0
+                                        nextEntryOriginX: previousEntryOriginX,
+                                        nextEntryOriginY: previousEntryOriginY
                                     };
                                 }else{
                                     return {
@@ -178,6 +182,15 @@ $(document).ready(function () {
                                         nextEntryOriginY: previousEntryOriginY + previousEntryHeight
                                     };
                                 }
+                            },
+                            entryRender: function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
+                                legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
+                                legendCtx.fillStyle = thisSeries.color;
+                                var charHeight = legendCtx.measureText('M').width;
+                                legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, charHeight, legendCtx.measureText(thisSeries.label).width);
+                                legendCtx.fillStyle = "#000";
+                                legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
+                                
                             },
                             margin: 0
                         }
@@ -200,13 +213,30 @@ $(document).ready(function () {
                     expect(newContainer.is('div')).toBe(true);
                     expect(newContainer.hasClass('legend')).toBe(true);
                 });
+                it('if "container" is a jQuery-wrapped canvas, it should return the canvas\' 2d context as "context" and the same jquery-wrapped canvas as "container"', function(){
+                    legendContainer.css('display', 'block');
+                    options.legend.canvas.container = legendContainer;
+                    var legendContext = legendContainer[0].getContext('2d');
+                    var plot = $.plot(plotContainer, series, options);
+                    var plotContext = plot.getCanvas().getContext('2d');
+                    var placeholder = plot.getPlaceholder();
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, placeholder, plotContext);
+                    var newContainer = containerAndContext.container;
+                    var newContext = containerAndContext.context;
+                    expect(newContext).not.toBe(plotContext);
+                    expect(newContext).toBe(legendContext);
+                    expect(newContainer.is('div')).toBe(false);
+                    expect(newContainer.is('canvas')).toBe(true);
+                    expect(newContainer).toBe(legendContainer);
+                    expect(newContainer.hasClass('legend')).toBe(false);
+                });
             });
             describe('getFontOptions', function(){
                beforeEach(setupDom);
                it("should expose the same font options as the plot's css font options", function(){
                     var plotFontOptions = {
                         style: "italic",
-                        size: 11,
+                        size: 23,
                         variant: "small-caps",
                         weight: "bold",
                         family: "sans-serif"
