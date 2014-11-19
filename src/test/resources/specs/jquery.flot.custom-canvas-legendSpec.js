@@ -143,9 +143,10 @@ $(document).ready(function () {
                 });
 
                 legendContainer = $('<canvas/>').css({
-                    'height': '300px',
-                    'width': '300px',
                     'display': 'none'
+                }).attr({
+                    'height': '300',
+                    'width': '300'
                 });
                 $('body').append('<h2>' + this.description + '</h2>');
                 $('body').append(plotContainer);
@@ -190,7 +191,6 @@ $(document).ready(function () {
                                 legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, charHeight, legendCtx.measureText(thisSeries.label).width);
                                 legendCtx.fillStyle = "#000";
                                 legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
-                                
                             },
                             margin: 0
                         }
@@ -244,6 +244,7 @@ $(document).ready(function () {
                     expect(newContext instanceof CanvasRenderingContext2D).toBe(true);
                     expect(newContainer.is('div')).toBe(false);
                     expect(newContainer.is('canvas')).toBe(true);
+                    //the newContainer's parent should be the original 'container' parameter
                     expect(newContainer.parent()[0]).toBe(legendContainer[0]);
                 });
             });
