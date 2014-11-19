@@ -1,4 +1,4 @@
-/* global $ document, describe, beforeEach, afterEach, expect, it, Math*/
+/* global $ document describe beforeEach afterEach expect it Math*/
 $(document).ready(function () {
     /**
      * @param {Array} array any array
@@ -7,11 +7,29 @@ $(document).ready(function () {
      */
     function pluck(array, propertyName){
         var values = [];
-        for(var i = 0; i < array.length; i++){
-            values.push(array[i][propertyName]);
-        }
+        $.each(array, function(index, value){
+            values.push(value[propertyName]);
+        });
         return values;
     }
+    
+    /**
+     * Provide a shim for pre-ECMAScript 5 browsers that do not have Object.keys and Array.forEach
+     * Do not enumerate properties inherited in the prototype
+     * @param {Object} object
+     * @param {function} callback accepting two arguments - {String} property name, and {Any} propertyValue
+     * @returns {undefined}
+     */
+    function forEachProperty(object, callback){
+        var key, value;
+        for (key in object) {
+            if (Object.prototype.hasOwnProperty.call(object, key)) {
+                value = object[key];
+                callback.call(object, key, value);
+            }
+        }
+    }
+    
     describe('jquery.flot.custom-canvas-legend.js', function () {
 
         var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
@@ -174,6 +192,37 @@ $(document).ready(function () {
                     expect(newContext).toBe(plotContext);
                     expect(newContainer.is('div')).toBe(true);
                     expect(newContainer.hasClass('legend')).toBe(true);
+                });
+            });
+            describe('getFontOptions', function(){
+               beforeEach(setupDom);
+               it("should expose the same font options as the plot's css font options", function(){
+                    var plotFontOptions = {
+                        style: "italic",
+                        size: 11,
+                        variant: "small-caps",
+                        weight: "bold",
+                        family: "sans-serif"
+                    };
+                    var fontOptionsWithPrefix = {};
+                    forEachProperty(plotFontOptions, function(key, value){
+                       fontOptionsWithPrefix['font-'+key] = value; 
+                    });
+                    plotContainer.css(fontOptionsWithPrefix);
+                    
+                    var plot = $.plot(plotContainer, series, options);
+                    var placeholder = plot.getPlaceholder();
+                    var pluginFontOptions = pluginMethods.getFontOptions(placeholder);
+                    forEachProperty(plotFontOptions, function (key, value) {
+                        expect(pluginFontOptions[key]).toBe(value);
+                    });
+                });
+            });
+            describe('getLegendSize', function(){
+                beforeEach(setupDom);
+                it('should get the correct size', function(){ 
+                    var plot = $.plot(plotContainer, series, options);
+//                    pluginMethods.getLegendSize(entrySize, entryLayout, sortedSeries, legendCtx, options, fontOptions);
                 });
             });
         });//tests that need canvas
