@@ -271,8 +271,8 @@
         legendCtx.fillStyle = oldFillStyle;
 
         //now do actual rendering of legend entries
-        var previousEntryOriginX = 0,
-                previousEntryOriginY = 0,
+        var previousEntryOriginX = legendOriginX,
+                previousEntryOriginY = legendOriginY,
                 previousEntryWidth = 0,
                 previousEntryHeight = 0,
                 nextEntryOrigin,
