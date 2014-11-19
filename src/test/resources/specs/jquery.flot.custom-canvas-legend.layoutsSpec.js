@@ -58,7 +58,7 @@ $(document).ready(function () {
                             legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
                             legendCtx.fillStyle = thisSeries.color;
                             var charHeight = legendCtx.measureText('M').width;
-                            legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, charHeight, legendCtx.measureText(thisSeries.label).width);
+                            legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, 50, 50);
                             legendCtx.fillStyle = "#000";
                             legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
                         },
