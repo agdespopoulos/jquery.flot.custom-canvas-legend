@@ -148,6 +148,7 @@
                             <!-- main app-->
                             <include>src/main/resources/jquery.flot.custom-canvas-legend.js</include>
                             <include>src/main/resources/jquery.flot.custom-canvas-legend.layouts.js</include>
+                            <include>src/main/resources/jquery.flot.custom-canvas-legend.renderersAndSizers.js</include>
                         </sourceIncludes>
                     </configuration>
                 </plugin>
