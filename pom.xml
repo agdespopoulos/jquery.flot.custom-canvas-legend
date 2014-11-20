@@ -142,9 +142,6 @@
                         <jsSrcDir>${basedir}</jsSrcDir>
                         <jsTestSrcDir>${basedir}/src/test/resources/specs</jsTestSrcDir>
                         <sourceIncludes>
-                            <!-- test dependencies -->
-                            <include>src/test/resources/libs/js-imagediff-1.0.7/imagediff.js</include>
-                            
                             <!--library dependencies -->
                             <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
                             <include>${webjars.libs}/flot/${flot.version}/jquery.flot.js</include>
