@@ -123,6 +123,10 @@
     }
     /**
      * 
+     * If 'container' is undefined, return the plotContext's canvas as 'container' and plotContext as 'context'.
+     * If 'container' is defined and is a canvas, return the canvas as 'container' and the canvas' context as 'context'.
+     * If 'container' is defined and is not a canvas, create a canvas element in it, return the new canvas element as 'container', and the new canvas element's context as 'context'.
+     * 
      * @param {jQuery} container
      * @param {CanvasRenderingContext2D} plotContext
      * @returns {Object} an object with two properties 'container' and 'context'.
@@ -149,6 +153,13 @@
             context: finalContext
         };
     }
+    /**
+     * Sort 'series' by 'sortedOption'.
+     * See plugin public API documentation for what sortedOption's values mean.
+     * @param {falsy|String|function} sortedOption
+     * @param {Array} series
+     * @returns {Array}
+     */
     function getSortedSeries(sortedOption, series) {
         var sortedSeries;
         if (sortedOption) {
@@ -172,6 +183,17 @@
         }
         return sortedSeries;
     }
+    /*
+     * 
+     * @param {Object|function} entrySize
+     * @param {function} layout
+     * @param {Array} sortedSeries
+     * @param {CanvasRenderingContext2D} legendCtx
+     * @param {Object} options
+     * @param {Object} fontOptions
+     * @returns {Object} an object with two properties, 'height' and 'width', 
+     *  both having values of type 'Number'
+     */
     function getLegendSize(entrySize, layout, sortedSeries, legendCtx, options, fontOptions) {
         var seriesIndex;
         var legendWidth = 0;
@@ -252,7 +274,12 @@
             width: legendWidth
         };
     }
-    // draws the legend on the canvas, using the HTML added by flot as a guide
+    /**
+     * draws the legend on the canvas
+     * @param {jQuery.plot} plot
+     * @param {CanvasRenderingContext2D} plotCtx
+     * @returns {undefined}
+     */
     function drawLegend(plot, plotCtx) {
         var options = plot.getOptions();
         if (!(options.canvasLegend && options.canvasLegend.show)){

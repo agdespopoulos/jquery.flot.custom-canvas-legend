@@ -1,4 +1,4 @@
-/* global $ document describe beforeEach afterEach expect it Math*/
+/* global $ document describe beforeEach afterEach expect it Math CanvasRenderingContext2D*/
 $(document).ready(function () {
     /**
      * @param {Array} array any array
