@@ -1,4 +1,4 @@
-/* global $ document describe beforeEach afterEach expect it Math*/
+/* global $ document describe beforeEach afterEach expect it Math imagediff*/
 $(document).ready(function () {
 
     describe('jquery.flot.custom-canvas-legend.renderersAndSizers.js', function () {
@@ -66,7 +66,11 @@ $(document).ready(function () {
             };
         };
         beforeEach(setupDom);
+        beforeEach(function () {
+            this.addMatchers(imagediff.jasmine);
+        });
         it('should render box left and label right', function () {
+            
             var boxLeftLabelRight = $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight;
             var entryRender = boxLeftLabelRight.render;
             var entrySize = boxLeftLabelRight.size;
@@ -74,6 +78,18 @@ $(document).ready(function () {
             options.canvasLegend.entryRender = entryRender;
             options.canvasLegend.entrySize = entrySize;
             var plot = $.plot(plotContainer, series, options);
+            
+            var knownGood = new Image();
+            knownGood.src = '/src/test/resources/img/boxLeftLabelRight.png';
+            
+            waitsFor(function(){
+                return knownGood.complete;
+            }, 'image not loaded', 2000);
+            
+            runs(function(){
+                expect(imagediff.toImageData(legendContainer[0])).toImageDiffEqual(knownGood, 10);
+            });
+            
         });
     });//root describe block
 });//document ready
