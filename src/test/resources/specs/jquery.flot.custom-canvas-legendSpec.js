@@ -200,8 +200,7 @@ $(document).ready(function () {
                     var plot = $.plot(plotContainer, series, options);
                     var plotCanvas = plot.getCanvas();
                     var plotContext = plotCanvas.getContext('2d');
-                    var placeholder = plot.getPlaceholder();
-                    var containerAndContext = pluginMethods.getLegendContainerAndContext(undefined, placeholder, plotContext);
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(undefined, plotContext);
                     var newContainer = containerAndContext.container;
                     var newContext = containerAndContext.context;
                     expect(newContext).toBe(plotContext);
@@ -213,8 +212,7 @@ $(document).ready(function () {
                     var legendContext = legendContainer[0].getContext('2d');
                     var plot = $.plot(plotContainer, series, options);
                     var plotContext = plot.getCanvas().getContext('2d');
-                    var placeholder = plot.getPlaceholder();
-                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, placeholder, plotContext);
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, plotContext);
                     var newContainer = containerAndContext.container;
                     var newContext = containerAndContext.context;
                     expect(newContext).not.toBe(plotContext);
@@ -230,8 +228,7 @@ $(document).ready(function () {
                     options.canvasLegend.container = legendContainer;
                     var plot = $.plot(plotContainer, series, options);
                     var plotContext = plot.getCanvas().getContext('2d');
-                    var placeholder = plot.getPlaceholder();
-                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, placeholder, plotContext);
+                    var containerAndContext = pluginMethods.getLegendContainerAndContext(legendContainer, plotContext);
                     var newContainer = containerAndContext.container;
                     var newContext = containerAndContext.context;
                     expect(newContext).not.toBe(plotContext);

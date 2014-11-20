@@ -27,6 +27,9 @@
  * 					If a function, the function is called to perform custom rendering of the legend entry for each series. 
  * 					The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
  * 					If null, a box matching the color of the series is drawn to the left of the series text in 13 pt font.
+ * 			font: optional object describing any desired font options for the canvas legend. This object is passed to the entryRender and entrySize function as "fontOptions". 
+ *                          Any options not specified will default to the value that the main plot container's css dictates.
+                              
  * 			
  * 		}
  * }
@@ -98,16 +101,35 @@
         var value = seriesA.label > seriesB.label ? 1 : -1;
         return value;
     }
-    function getFontOptions(placeholder) {
-        return {
+    /**
+     * 
+     * @param {Object} placeholder - a jQuery element from which to acquire 
+     *  default font options.
+     * @param {Object} fontOptions - the options a user specifies
+     * @returns {Object} - fontOptions merged with placeholder's css, preferring
+     *  fontOptions when both have a value for the same property.
+     */
+    function getFontOptions(placeholder, fontOptions) {
+        
+        var placeholderOptions = {
             style: placeholder.css("font-style"),
             size: Math.round(+placeholder.css("font-size").replace("px", "") || 13),
             variant: placeholder.css("font-variant"),
             weight: placeholder.css("font-weight"),
             family: placeholder.css("font-family")
         };
+       
+        return $.extend({}, placeholderOptions, fontOptions);
     }
-    function getLegendContainerAndContext(container, placeholder, plotContext) {
+    /**
+     * 
+     * @param {jQuery} container
+     * @param {CanvasRenderingContext2D} plotContext
+     * @returns {Object} an object with two properties 'container' and 'context'.
+     *  The 'context' property's value will be of type 'CanvasRenderingContext2D'. 
+     *  The 'container' property's value will be of type 'HTMLCanvasElement'.
+     */
+    function getLegendContainerAndContext(container, plotContext) {
         var finalContainer, finalContext;
         if (container) {
             if (container.is('canvas')) {
@@ -242,7 +264,7 @@
         var layout = options.canvasLegend.layout || defaultLayout;
 
         var containerOption = options.canvasLegend.container;
-        var containerAndContext = getLegendContainerAndContext(containerOption, placeholder, plotCtx);
+        var containerAndContext = getLegendContainerAndContext(containerOption, plotCtx);
         var container = containerAndContext.container;
         //the legendCtx will either be plotCtx or the context from an external canvas,
         //depending on what is contained in canvas.container
