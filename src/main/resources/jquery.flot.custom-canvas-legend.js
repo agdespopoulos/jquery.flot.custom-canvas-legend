@@ -371,63 +371,6 @@
             previousEntryHeight = entryHeight;
         }
 
-//		var num_labels = 0;
-//		var s, label;
-//		// get width of legend and number of valid legend entries
-//		for(var i = 0; i < series.length; ++i) {
-//			s = series[i];
-//			label = s.label;
-//			if(!label) continue;
-//			num_labels++;
-//			labelWidth = legendCtx.measureText(label).width;
-//                        if(options.legend.horizontal){
-//                            legendWidth+=labelWidth;
-//                        }else {
-//                            if(labelWidth > legendWidth) legendWidth = labelWidth}
-//		}
-//
-//                if (options.legend.horizontal){
-//                    legendWidth = legendWidth + num_labels*(LEGEND_BOX_WIDTH + PADDING_RIGHT);
-//                    legendHeight = LEGEND_BOX_LINE_HEIGHT;
-//                }else {
-//                    legendWidth = legendWidth + LEGEND_BOX_WIDTH + PADDING_RIGHT;
-//                    legendHeight = num_labels * LEGEND_BOX_LINE_HEIGHT;
-//                }
-//		
-//		var x, y;
-//		if(isExternalLegend) {
-//			x = 0
-//			y = 0;
-//		} else {
-//			
-//			if(options.legend.backgroundOpacity != 0.0) {
-//				var c = options.legend.backgroundColor;
-//				if(c == null) c = options.grid.backgroundColor;
-//				if(c && typeof c == "string") {
-//					legendCtx.globalAlpha = options.legend.backgroundOpacity;
-//					legendCtx.fillStyle = c;
-//					legendCtx.fillRect(x, y, legendWidth, legendHeight);
-//					legendCtx.globalAlpha = 1.0;
-//				}
-//			}
-//		}
-//		var posx=x+2, posy;
-//		for(var i = 0; i < series.length; ++i) {
-//			s = series[i];
-//			if (options.legend.horizontal){
-//	            posy = y+2;
-//			}else{
-//	           posx=x;
-//	           posy = y + (i * 18);
-//			}
-//			boxLegend(legendCtx, s, options, posx, posy, lf, fontOptions);
-//			if (options.legend.horizontal){
-//	            posx = posx +  legendCtx.measureText(label).width+PADDING_RIGHT;
-//	        }
-//		}
-//		if(!isExternalLegend){
-//			container.hide(); // hide the HTML version
-//		}
     }
     /**
      * @param position {String}, one of (ne, nw, se, sw)
@@ -500,18 +443,5 @@
             getLegendSize: getLegendSize
         }
     });
-    
-//    $.plot.custom_canvas_legend = {
-//        layout : {
-//            vertical : function(){
-//                
-//            }
-//        },
-//        entrySize : {
-//            default: function(){
-//                    
-//            }
-//        }
-//    };
     
 })(jQuery);
