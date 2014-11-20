@@ -240,21 +240,20 @@ $(document).ready(function () {
                 });
             });
             describe('getFontOptions', function(){
-               beforeEach(setupDom);
-               it("should expose the same font options as the plot's css font options", function(){
-                    var plotFontOptions = {
-                        style: "italic",
-                        size: 23,
-                        variant: "small-caps",
-                        weight: "bold",
-                        family: "sans-serif"
-                    };
-                    var fontOptionsWithPrefix = {};
-                    forEachProperty(plotFontOptions, function(key, value){
-                       fontOptionsWithPrefix['font-'+key] = value; 
-                    });
+                beforeEach(setupDom);
+                var plotFontOptions = {
+                    style: "italic",
+                    size: 23,
+                    variant: "small-caps",
+                    weight: "bold",
+                    family: "sans-serif"
+                };
+                var fontOptionsWithPrefix = {};
+                forEachProperty(plotFontOptions, function (key, value) {
+                    fontOptionsWithPrefix['font-' + key] = value;
+                });
+                it("should return the same font options as the plot's css font options if the user does not define any font options", function(){
                     plotContainer.css(fontOptionsWithPrefix);
-                    
                     var plot = $.plot(plotContainer, series, options);
                     var placeholder = plot.getPlaceholder();
                     var pluginFontOptions = pluginMethods.getFontOptions(placeholder);
@@ -262,6 +261,46 @@ $(document).ready(function () {
                         expect(pluginFontOptions[key]).toBe(value);
                     });
                 });
+                it("should return the user's font options if the user specifies every possible font option", function(){
+                   plotContainer.css(fontOptionsWithPrefix);
+                   var legendFontOptions = {
+                        style: "normal",
+                        size: 42,
+                        variant: "normal",
+                        weight: "normal",
+                        family: '"Times New Roman"'
+                   };
+                   options.canvasLegend.font = legendFontOptions;
+                   
+                   var plot = $.plot(plotContainer, series, options);
+                   var placeholder = plot.getPlaceholder();
+                   var returnedFontOptions = pluginMethods.getFontOptions(placeholder, legendFontOptions);
+                   forEachProperty(returnedFontOptions, function(key, value){
+                      expect(legendFontOptions[key]).toBe(value);
+                   });
+                });
+                it("should return a mixture of the user's font options and the plot's options if the user does not specify all possible font options", function(){
+                   plotContainer.css(fontOptionsWithPrefix);
+                   var legendFontOptions = {
+                        style: "normal",
+                        size: 42,
+                        weight: "normal"
+                   };
+                   options.canvasLegend.font = legendFontOptions;
+                   
+                   var plot = $.plot(plotContainer, series, options);
+                   var placeholder = plot.getPlaceholder();
+                   var returnedFontOptions = pluginMethods.getFontOptions(placeholder, legendFontOptions);
+                   forEachProperty(returnedFontOptions, function(key, value){
+                      if('undefined' === typeof legendFontOptions[key]){
+                          expect(plotFontOptions[key]).toBe(value);
+                      }
+                      else{
+                          expect(legendFontOptions[key]).toBe(value);
+                      }
+                   });
+                });
+                
             });
             describe('getLegendSize', function(){
                 beforeEach(setupDom);
