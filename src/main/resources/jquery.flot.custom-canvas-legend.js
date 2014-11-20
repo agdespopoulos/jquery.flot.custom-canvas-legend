@@ -86,17 +86,6 @@
     function addLastDrawHook(plot) {
         plot.hooks.draw.push(drawLegend);
     }
-    function defaultRender(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions) {
-        legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
-        legendCtx.textAlign = "left";
-        legendCtx.textBaseline = "bottom";
-        legendCtx.fillStyle = "#F00";
-    }
-    function defaultLayout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryHeight, previousEntryWidth) {
-        var LEGEND_BOX_WIDTH = 22; // color box
-        var PADDING_RIGHT = 5;
-        var LEGEND_BOX_LINE_HEIGHT = 18;
-    }
     function ascendingAlphabeticalSort(seriesA, seriesB) {
         var value = seriesA.label > seriesB.label ? 1 : -1;
         return value;
@@ -183,7 +172,7 @@
         }
         return sortedSeries;
     }
-    /*
+    /**
      * 
      * @param {Object|function} entrySize
      * @param {function} layout
@@ -287,8 +276,8 @@
         }
         var placeholder = plot.getPlaceholder();
         var fontOptions = getFontOptions(placeholder);
-        var entryRender = options.canvasLegend.entryRender || defaultRender;
-        var layout = options.canvasLegend.layout || defaultLayout;
+        var entryRender = options.canvasLegend.entryRender;
+        var layout = options.canvasLegend.layout;
 
         var containerOption = options.canvasLegend.container;
         var containerAndContext = getLegendContainerAndContext(containerOption, plotCtx);
@@ -406,28 +395,6 @@
             throw Error('Unrecognized value for "position" option: ' + position);
         }
         return {x: x, y: y};
-    }
-    /**
-     * @returns [Number, Number] - an array [the width of the drawn legend entry, and the height of the drawn legend entry]
-     */
-    function boxLegend(legendCtx, series, options, posx, posy, labelFormatter, fontOptions) {
-        var label = series.label;
-        if (!label)
-            return;
-        if (lf)
-            label = labelFormatter(label, series);
-
-
-        legendCtx.fillStyle = options.legend.labelBoxBorderColor;
-        legendCtx.fillRect(posx, posy, 18, 14);
-        legendCtx.fillStyle = "#FFF";
-        legendCtx.fillRect(posx + 1, posy + 1, 16, 12);
-        legendCtx.fillStyle = s.color;
-        posx = posx + 22;
-        posy = posy + f.size + 2;
-
-        legendCtx.fillStyle = options.legend.color;
-        legendCtx.fillText(label, posx, posy);
     }
 
     $.plot.plugins.push({
