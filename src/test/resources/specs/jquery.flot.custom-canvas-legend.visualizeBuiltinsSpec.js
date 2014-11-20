@@ -59,7 +59,7 @@ $(document).ready(function () {
             };
             var plot = $.plot(plotContainer, series, options);
         });
-        it('external canvas vertical box left label right', function () {
+        it('external canvas horizontal box left label right', function () {
             options = {
                 legend: {
                     show: false
