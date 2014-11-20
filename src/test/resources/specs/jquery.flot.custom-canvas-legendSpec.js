@@ -164,7 +164,7 @@ $(document).ready(function () {
                 series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
                 options = {
                     legend: {
-                        show: false,
+                        show: false
                     },
                     canvasLegend: {
                         show: true,
@@ -313,8 +313,6 @@ $(document).ready(function () {
                     expect(size.height).toBe(options.canvasLegend.entrySize.height*series.length);
                 });
                 it('should get the correct size given a dynamic entry size function', function(){ 
-                    var entryWidth = 200,
-                        entryHeight = 50;
                         
                     options.canvasLegend.entrySize = function(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions){
                         var label = thisSeries.label;
