@@ -271,7 +271,7 @@
      */
     function drawLegend(plot, plotCtx) {
         var options = plot.getOptions();
-        var canvasLegendOpts = canvasLegendOpts;
+        var canvasLegendOpts = options.canvasLegend;
         if (!(canvasLegendOpts && canvasLegendOpts.show)){
             return;
         }
