@@ -374,10 +374,12 @@
     function calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight) {
         var x,y, marginX, marginY;
         margin = margin || 0;
-        if (null == margin[0]){
+        //if margin is not an array
+        if (undefined === margin[0]){
             marginX = marginY = margin;
         }
         else{
+            //if margin is an array
             marginX = margin[0];
             marginY = margin[1];
         }
