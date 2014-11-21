@@ -204,8 +204,7 @@
 
         if ('function' === typeof entrySize) {
 
-            for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
-                thisSeries = sortedSeries[seriesIndex];
+            $.each(sortedSeries, function(seriesIndex, thisSeries){
                 if(0 === seriesIndex){
                     nextEntryOrigin = {
                         nextEntryOriginX : previousEntryOriginX,
@@ -229,10 +228,10 @@
                 previousEntryOriginY = nextEntryOriginY;
                 previousEntryWidth = entryWidth;
                 previousEntryHeight = entryHeight;
-            }
+            });
         }
         else if ('number' === typeof entrySize.height && 'number' === typeof entrySize.width) {
-            for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
+            $.each(sortedSeries, function(seriesIndex, thisSeries){
                 entryWidth = entrySize.width;
                 entryHeight = entrySize.height;
                 if(0 === seriesIndex){
@@ -254,7 +253,7 @@
                 previousEntryOriginY = nextEntryOriginY;
                 previousEntryWidth = entryWidth;
                 previousEntryHeight = entryHeight;
-            }
+            });
         }
         else {
             throw Error('Unrecognized value for "entrySize" option: ' + entrySize);
@@ -345,8 +344,7 @@
                 entryWidth,
                 entryHeight;
 
-        for (seriesIndex = 0; seriesIndex < sortedSeries.length; seriesIndex++) {
-            thisSeries = sortedSeries[seriesIndex];
+        $.each(sortedSeries,function(seriesIndex, thisSeries){
             nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
             nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
             nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
@@ -359,7 +357,7 @@
             previousEntryOriginY = nextEntryOriginY;
             previousEntryWidth = entryWidth;
             previousEntryHeight = entryHeight;
-        }
+        });
 
     }
     /**

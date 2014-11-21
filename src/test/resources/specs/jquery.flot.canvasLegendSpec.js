@@ -34,13 +34,12 @@ $(document).ready(function () {
 
         var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
-        for (var i = 0; i < $.plot.plugins.length; i++) {
-            plugin = $.plot.plugins[i];
+        $.each($.plot.plugins, function(index,plugin){
             if (pluginName === plugin.name) {
                 customCanvasLegend = plugin;
-                break;
+                return false;//break
             }
-        }
+        });
         var pluginMethods = customCanvasLegend._private_methods;
         describe('simple unit tests', function(){
            describe('calculateLegendOrigin', function(){
@@ -68,11 +67,10 @@ $(document).ready(function () {
                 */
                var runWithPlausibleMargins = function(toRun){
                    var plausibleMargin;
-                   for(var i = 0; i < plausibleMargins.length; i++){
-                       plausibleMargin = plausibleMargins[i];
+                   $.each(plausibleMargins, function(index, plausibleMargin){
                        var margins = getMargins(plausibleMargin);
                        toRun(plausibleMargin, margins.x, margins.y);
-                   }
+                   });
                };
                var plotOffset = {top: 2, left: 3},
                     borderWidth = 3,

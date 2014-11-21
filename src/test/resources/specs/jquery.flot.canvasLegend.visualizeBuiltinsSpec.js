@@ -5,13 +5,12 @@ $(document).ready(function () {
 
         var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
-        for (var i = 0; i < $.plot.plugins.length; i++) {
-            plugin = $.plot.plugins[i];
+        $.each($.plot.plugins, function(index,plugin){
             if (pluginName === plugin.name) {
                 customCanvasLegend = plugin;
-                break;
+                return false;//break
             }
-        }
+        });
         var pluginMethods = customCanvasLegend._private_methods;
 
         var legendContainer, plotContainer, series, options;
