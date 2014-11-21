@@ -271,15 +271,16 @@
      */
     function drawLegend(plot, plotCtx) {
         var options = plot.getOptions();
-        if (!(options.canvasLegend && options.canvasLegend.show)){
+        var canvasLegendOpts = canvasLegendOpts;
+        if (!(canvasLegendOpts && canvasLegendOpts.show)){
             return;
         }
         var placeholder = plot.getPlaceholder();
         var fontOptions = getFontOptions(placeholder);
-        var entryRender = options.canvasLegend.entryRender;
-        var layout = options.canvasLegend.layout;
+        var entryRender = canvasLegendOpts.entryRender;
+        var layout = canvasLegendOpts.layout;
 
-        var containerOption = options.canvasLegend.container;
+        var containerOption = canvasLegendOpts.container;
         var containerAndContext = getLegendContainerAndContext(containerOption, plotCtx);
         var container = containerAndContext.container;
         //the legendCtx will either be plotCtx or the context from an external canvas,
@@ -291,10 +292,10 @@
         var plotHeight = plot.height();
         var plotWidth = plot.width();
 
-        var sortedSeries = getSortedSeries(options.canvasLegend.sorted, series);
+        var sortedSeries = getSortedSeries(canvasLegendOpts.sorted, series);
 
-        var entrySize = options.canvasLegend.entrySize;
-        var layout = options.canvasLegend.layout;
+        var entrySize = canvasLegendOpts.entrySize;
+        var layout = canvasLegendOpts.layout;
 
         var legendSize = getLegendSize(entrySize, layout, sortedSeries, legendCtx, options, fontOptions);
 
@@ -304,8 +305,8 @@
 
         var legendOrigin, legendOriginX, legendOriginY;
 
-        if (options.canvasLegend.position && !options.canvasLegend.container) {
-            legendOrigin = calculateLegendOrigin(options.canvasLegend.position, options.canvasLegend.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
+        if (canvasLegendOpts.position && !canvasLegendOpts.container) {
+            legendOrigin = calculateLegendOrigin(canvasLegendOpts.position, canvasLegendOpts.margin, plotOffset, options.grid.borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
             legendOriginX = legendOrigin.x;
             legendOriginY = legendOrigin.y;
         }
@@ -321,8 +322,8 @@
         var oldFillStyle = legendCtx.fillStyle;
 
         //render background
-        legendCtx.globalAlpha = options.canvasLegend.backgroundOpacity || 1;
-        legendCtx.fillStyle = options.canvasLegend.backgroundColor || '#fff';
+        legendCtx.globalAlpha = canvasLegendOpts.backgroundOpacity || 1;
+        legendCtx.fillStyle = canvasLegendOpts.backgroundColor || '#fff';
         legendCtx.fillRect(legendOriginX, legendOriginY, legendWidth, legendHeight);
 
         //restore previous context state
