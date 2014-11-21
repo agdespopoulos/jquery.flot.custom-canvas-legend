@@ -3,7 +3,7 @@ $(document).ready(function () {
 
     describe('view all built-in functionality', function () {
 
-        var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
+        var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
         for (var i = 0; i < $.plot.plugins.length; i++) {
             plugin = $.plot.plugins[i];
@@ -51,10 +51,10 @@ $(document).ready(function () {
                 },
                 canvasLegend: {
                     show: true,
-                    entrySize: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.size,
-                    entryRender: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.render,
+                    entrySize: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.size,
+                    entryRender: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.render,
                     container: legendContainer,
-                    layout: $.plot.custom_canvas_legend.layouts.vertical
+                    layout: $.plot.canvasLegend.layouts.vertical
                 }
             };
             var plot = $.plot(plotContainer, series, options);
@@ -66,10 +66,10 @@ $(document).ready(function () {
                 },
                 canvasLegend: {
                     show: true,
-                    entrySize: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.size,
-                    entryRender: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.render,
+                    entrySize: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.size,
+                    entryRender: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.render,
                     container: legendContainer,
-                    layout: $.plot.custom_canvas_legend.layouts.horizontal
+                    layout: $.plot.canvasLegend.layouts.horizontal
                 }
             };
             var plot = $.plot(plotContainer, series, options);
@@ -81,10 +81,10 @@ $(document).ready(function () {
                 },
                 canvasLegend: {
                     show: true,
-                    entrySize: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.size,
-                    entryRender: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.render,
+                    entrySize: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.size,
+                    entryRender: $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight.render,
                     position: 'ne',
-                    layout: $.plot.custom_canvas_legend.layouts.horizontal
+                    layout: $.plot.canvasLegend.layouts.horizontal
                 }
             };
             var plot = $.plot(plotContainer, series, options);

@@ -407,7 +407,7 @@
     $.plot.plugins.push({
         init: init,
         options: {},
-        name: 'custom-canvas-legend',
+        name: 'canvasLegend',
         version: '0.1',
         _private_methods: {
             calculateLegendOrigin: calculateLegendOrigin,

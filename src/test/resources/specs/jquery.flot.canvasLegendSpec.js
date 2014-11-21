@@ -30,9 +30,9 @@ $(document).ready(function () {
         }
     }
     
-    describe('jquery.flot.custom-canvas-legend.js', function () {
+    describe('jquery.flot.canvasLegend.js', function () {
 
-        var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
+        var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
         for (var i = 0; i < $.plot.plugins.length; i++) {
             plugin = $.plot.plugins[i];

@@ -1,5 +1,5 @@
 (function(){
-    $.plot.custom_canvas_legend = $.plot.custom_canvas_legend || {};
+    $.plot.canvasLegend = $.plot.custom_canvas_legend || {};
     function vertical (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
         //simple vertical layout
         var nextEntryOriginY = previousEntryOriginY + previousEntryHeight;
@@ -16,7 +16,7 @@
             nextEntryOriginY: previousEntryOriginY
         };
     };
-    $.plot.custom_canvas_legend.layouts = {
+    $.plot.canvasLegend.layouts = {
         vertical: vertical,
         horizontal: horizontal
     };

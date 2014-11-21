@@ -1,9 +1,9 @@
 /* global $ document describe beforeEach afterEach expect it Math*/
 $(document).ready(function () {
 
-    describe('jquery.flot.custom-canvas-legend.layouts.js', function () {
+    describe('jquery.flot.canvasLegend.layouts.js', function () {
         
-        var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
+        var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
         for (var i = 0; i < $.plot.plugins.length; i++) {
             plugin = $.plot.plugins[i];
@@ -68,7 +68,7 @@ $(document).ready(function () {
         };
         beforeEach(setupDom);
         it('should lay out horizontally', function(){
-            var horizontal = $.plot.custom_canvas_legend.layouts.horizontal;
+            var horizontal = $.plot.canvasLegend.layouts.horizontal;
             var previousEntryOriginX = 0,
                 previousEntryOriginY = 0,
                 previousEntryWidth = 10,
@@ -81,7 +81,7 @@ $(document).ready(function () {
             var plot = $.plot(plotContainer, series, options);
         });
         it('should lay out vertically', function(){
-            var vertical = $.plot.custom_canvas_legend.layouts.vertical;
+            var vertical = $.plot.canvasLegend.layouts.vertical;
             var previousEntryOriginX = 0,
                 previousEntryOriginY = 0,
                 previousEntryWidth = 42,

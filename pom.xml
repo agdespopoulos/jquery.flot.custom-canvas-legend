@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.cida.jquery.flot</groupId>
-    <artifactId>custom-canvas-legend</artifactId>
+    <artifactId>canvas-legend</artifactId>
     <version>0.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <organization>
@@ -62,7 +62,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- where to extract webjars to -->
-        <webjars.base>target/custom-canvas-legend/webjars</webjars.base>
+        <webjars.base>target/canvas-legend/webjars</webjars.base>
 
         <mavenCruft>META-INF/resources</mavenCruft>
         <!-- webjars base path plus the maven cruft needed to access the actual libraries -->
@@ -146,9 +146,9 @@
                             <include>${webjars.libs}/jquery/${jquery.version}/jquery.js</include>
                             <include>${webjars.libs}/flot/${flot.version}/jquery.flot.js</include>
                             <!-- main app-->
-                            <include>src/main/resources/jquery.flot.custom-canvas-legend.js</include>
-                            <include>src/main/resources/jquery.flot.custom-canvas-legend.layouts.js</include>
-                            <include>src/main/resources/jquery.flot.custom-canvas-legend.renderersAndSizers.js</include>
+                            <include>src/main/resources/jquery.flot.canvasLegend.js</include>
+                            <include>src/main/resources/jquery.flot.canvasLegend.layouts.js</include>
+                            <include>src/main/resources/jquery.flot.canvasLegend.renderersAndSizers.js</include>
                         </sourceIncludes>
                     </configuration>
                 </plugin>

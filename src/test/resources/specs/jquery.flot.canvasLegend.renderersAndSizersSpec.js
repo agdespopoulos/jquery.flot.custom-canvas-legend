@@ -1,9 +1,9 @@
 /* global $ document describe beforeEach afterEach expect it Math*/
 $(document).ready(function () {
 
-    describe('jquery.flot.custom-canvas-legend.renderersAndSizers.js', function () {
+    describe('jquery.flot.canvasLegend.renderersAndSizers.js', function () {
 
-        var customCanvasLegend, plugin, pluginName = 'custom-canvas-legend';
+        var customCanvasLegend, plugin, pluginName = 'canvasLegend';
         //get a reference to the plugin's private methods
         for (var i = 0; i < $.plot.plugins.length; i++) {
             plugin = $.plot.plugins[i];
@@ -67,7 +67,7 @@ $(document).ready(function () {
         };
         beforeEach(setupDom);
         it('should render box left and label right', function () {
-            var boxLeftLabelRight = $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight;
+            var boxLeftLabelRight = $.plot.canvasLegend.renderersAndSizers.boxLeftLabelRight;
             var entryRender = boxLeftLabelRight.render;
             var entrySize = boxLeftLabelRight.size;
             

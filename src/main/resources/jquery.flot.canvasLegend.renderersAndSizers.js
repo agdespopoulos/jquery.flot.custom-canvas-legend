@@ -1,6 +1,6 @@
 /* global $ Math */
 (function () {
-    $.plot.custom_canvas_legend = $.plot.custom_canvas_legend || {};
+    $.plot.canvasLegend = $.plot.canvasLegend || {};
 
     var boxLeftLabelRight = (function () {
         
@@ -68,7 +68,7 @@
         return exports;
     }());
 
-    $.plot.custom_canvas_legend.renderersAndSizers = {
+    $.plot.canvasLegend.renderersAndSizers = {
         boxLeftLabelRight: boxLeftLabelRight
     };
 }());
