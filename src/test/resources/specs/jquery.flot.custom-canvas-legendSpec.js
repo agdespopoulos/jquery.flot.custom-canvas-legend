@@ -44,8 +44,20 @@ $(document).ready(function () {
         var pluginMethods = customCanvasLegend._private_methods;
         describe('simple unit tests', function(){
            describe('calculateLegendOrigin', function(){
-               var margin = 1,
-                    plotOffset = {top: 2, left: 3},
+               var plausibleMargins = [undefined, 0, 1, [0,1],[2,3]];
+               /**
+                * Helper function to DRY testing
+                * @param {Function} toRun - called with one arg - margin
+                * @returns {undefined}
+                */
+               var runWithPlausibleMargins = function(toRun){
+                   var plausibleMargin;
+                   for(var i = 0; i < plausibleMargins.length; i++){
+                       plausibleMargin = plausibleMargins[i];
+                       toRun(plausibleMargin);
+                   }
+               };
+               var plotOffset = {top: 2, left: 3},
                     borderWidth = 3,
                     legendWidth = 4,
                     legendHeight = 5,
@@ -54,30 +66,31 @@ $(document).ready(function () {
                     origin,
                     position;
                     
-                it('should calculate the correct ne origin', function(){
+                it('should calculate the correct ne origin', runWithPlausibleMargins(function(margin){
                     position = 'ne';
                     origin = pluginMethods.calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
                     expect(origin.y).toBe(plotOffset.top + borderWidth + margin);
                     expect(origin.x).toBe(plotOffset.left + borderWidth + plotWidth - margin - legendWidth);
-                });
-                it('should calculate the correct nw origin', function(){
+                }));
+                it('should calculate the correct nw origin', runWithPlausibleMargins(function(margin){
                    position = 'nw';
                    origin = pluginMethods.calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
                    expect(origin.y).toBe(plotOffset.top + borderWidth + margin);
                    expect(origin.x).toBe(plotOffset.left + borderWidth + margin);
-                });
-                it('should calculate the correct sw origin', function(){
+                }));
+                it('should calculate the correct sw origin', runWithPlausibleMargins(function(margin){
                    position = 'sw';
                    origin = pluginMethods.calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
                    expect(origin.y).toBe(plotOffset.top + borderWidth + plotHeight - margin - legendHeight);
                    expect(origin.x).toBe(plotOffset.left + borderWidth + margin);
-                });
-                it('should calculate the correct se origin', function(){
+                }));
+                it('should calculate the correct se origin', runWithPlausibleMargins(function(margin){
+                   
                    position = 'se';
                    origin = pluginMethods.calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight);
                    expect(origin.y).toBe(plotOffset.top + borderWidth + plotHeight - margin - legendHeight);
                    expect(origin.x).toBe(plotOffset.left + borderWidth + plotWidth - margin - legendWidth);
-                });
+                }));
            });
            describe('getSortedSeries', function(){
                 var series;

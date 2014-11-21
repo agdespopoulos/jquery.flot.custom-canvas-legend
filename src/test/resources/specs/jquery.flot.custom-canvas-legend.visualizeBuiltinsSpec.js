@@ -41,7 +41,7 @@ $(document).ready(function () {
             // A null signifies separate line segments
 
             var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
-            series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
+            series = [{label: 'd1', data: d1}, {label: 'data series 2', data: d2}, {label: 'dataaaaaaaaaaaaaaa3', data: d3}];
         };
         beforeEach(setupDom);
         it('external canvas vertical box left label right', function () {
@@ -69,6 +69,21 @@ $(document).ready(function () {
                     entrySize: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.size,
                     entryRender: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.render,
                     container: legendContainer,
+                    layout: $.plot.custom_canvas_legend.layouts.horizontal
+                }
+            };
+            var plot = $.plot(plotContainer, series, options);
+        });
+        it('horizontal box left label right', function () {
+            options = {
+                legend: {
+                    show: false
+                },
+                canvasLegend: {
+                    show: true,
+                    entrySize: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.size,
+                    entryRender: $.plot.custom_canvas_legend.renderersAndSizers.boxLeftLabelRight.render,
+                    position: 'ne',
                     layout: $.plot.custom_canvas_legend.layouts.horizontal
                 }
             };

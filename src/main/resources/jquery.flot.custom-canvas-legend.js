@@ -11,7 +11,7 @@
  * 			position: "ne" or "nw" or "se" or "sw". Ignored if "container" option is specified.
  * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->{width:Number, height:Number}).
  * 					If a function, the function is called on each entry. The plugin uses this information to calculate the width of the overall legend.
- * 			margin: optional number of pixels or [x margin, y margin]. Ignored if "container" option is specified.
+ * 			margin: optional number of pixels or array [x margin, y margin]. Ignored if "container" option is specified.
  * 			container: optional jQuery object wrapping a canvas element, or an actual canvas element, or null, defaulting to null.
  * 					If null, legend will be drawn on the plot's canvas. Else, legend will be drawn in the specified canvas and the "margin" and "position" options will be ignored.
  * 			sorted: optional null, false, true, "ascending", "descending", "reverse", or (function(seriesA, seriesB)->Number), defaulting to null.
@@ -363,7 +363,7 @@
     }
     /**
      * @param position {String}, one of (ne, nw, se, sw)
-     * @param margin {Array|Number}, if array, must have exactly two elements, both of type Number
+     * @param margin {undefined|Array|Number}, if array, must have exactly two elements, both of type Number
      * @param plotOffset {Object}, must have two properties of name "top" and "left", both having values of type Number
      * @param borderWidth {Number}
      * @param legendWidth {Number}
@@ -374,8 +374,10 @@
      */
     function calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight) {
         var x,y;
-        if (margin[0] == null)
+        margin = margin || 0;
+        if (margin[0] == null){
             margin = [margin, margin];
+        }
         if (position.charAt(0) === "n") {
             y = Math.round(plotOffset.top + borderWidth + margin[1]);
         }
