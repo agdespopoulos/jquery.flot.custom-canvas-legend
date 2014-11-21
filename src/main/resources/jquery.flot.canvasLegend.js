@@ -231,9 +231,9 @@
             });
         }
         else if ('number' === typeof entrySize.height && 'number' === typeof entrySize.width) {
+            entryWidth = entrySize.width;
+            entryHeight = entrySize.height;
             $.each(sortedSeries, function(seriesIndex, thisSeries){
-                entryWidth = entrySize.width;
-                entryHeight = entrySize.height;
                 if(0 === seriesIndex){
                     nextEntryOrigin = {
                         nextEntryOriginX : previousEntryOriginX,
