@@ -373,25 +373,30 @@
      * @returns {x: Number, y:Number}
      */
     function calculateLegendOrigin(position, margin, plotOffset, borderWidth, legendWidth, legendHeight, plotWidth, plotHeight) {
-        var x,y;
+        var x,y, marginX, marginY;
         margin = margin || 0;
-        if (margin[0] == null){
-            margin = [margin, margin];
+        if (null == margin[0]){
+            marginX = marginY = margin;
         }
+        else{
+            marginX = margin[0];
+            marginY = margin[1];
+        }
+        
         if (position.charAt(0) === "n") {
-            y = Math.round(plotOffset.top + borderWidth + margin[1]);
+            y = Math.round(plotOffset.top + borderWidth + marginY);
         }
         else if (position.charAt(0) === "s") {
-            y = Math.round(plotOffset.top + borderWidth + plotHeight - margin[0] - legendHeight);
+            y = Math.round(plotOffset.top + borderWidth + plotHeight - marginY - legendHeight);
         }
         else {
             throw Error('Unrecognized value for "position" option: ' + position);
         }
         if (position.charAt(1) === "e") {
-            x = Math.round(plotOffset.left + borderWidth + plotWidth - margin[0] - legendWidth);
+            x = Math.round(plotOffset.left + borderWidth + plotWidth - marginX - legendWidth);
         }
         else if (position.charAt(1) === "w") {
-            x = Math.round(plotOffset.left + borderWidth + margin[0]);
+            x = Math.round(plotOffset.left + borderWidth + marginX);
         }
         else {
             throw Error('Unrecognized value for "position" option: ' + position);
