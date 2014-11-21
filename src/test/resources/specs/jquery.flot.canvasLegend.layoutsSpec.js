@@ -27,7 +27,7 @@ $(document).ready(function () {
                 'display': 'inline'
             }).attr({
                 'height': '300',
-                'width': '300'
+                'width': '500'
             });
             $('body').append('<h2>' + this.description + '</h2>');
             $('body').append(plotContainer);

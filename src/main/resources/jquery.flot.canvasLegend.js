@@ -22,7 +22,8 @@
  *   
  * 			layout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
  * 					If null, a vertical layout will be used. If a function, the resulting object's properties will be passed as entryOriginX and entryOriginY to the "render" function.
- * 			background: optional String color or (function(legendCtx, legendOriginX, legendOriginY, legendWidth, legendHeight)), defaulting to white.
+ *                      backgroundOpacity : optional Number between 0 and 1, defaulting to 1
+ * 			backgroundColor: optional String color, defaulting to white.
  * 			entryRender: optional (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->undefined), or null, defaulting to null.
  * 					If a function, the function is called to perform custom rendering of the legend entry for each series. 
  * 					The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
@@ -322,7 +323,7 @@
         var oldFillStyle = legendCtx.fillStyle;
 
         //render background
-        legendCtx.globalAlpha = options.legend.backgroundOpacity;
+        legendCtx.globalAlpha = options.canvasLegend.backgroundOpacity || 1;
         legendCtx.fillStyle = options.canvasLegend.backgroundColor || '#fff';
         legendCtx.fillRect(legendOriginX, legendOriginY, legendWidth, legendHeight);
 
