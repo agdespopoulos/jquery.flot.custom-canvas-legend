@@ -285,7 +285,6 @@
         //the legendCtx will either be plotCtx or the context from an external canvas,
         //depending on what is contained in canvas.container
         var legendCtx = containerAndContext.context;
-        var isExternalLegend = legendCtx === plotCtx ? false : true;
 
         var series = plot.getData();
         var plotOffset = plot.getPlotOffset();
