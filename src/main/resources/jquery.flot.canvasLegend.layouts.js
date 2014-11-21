@@ -35,8 +35,44 @@
             nextEntryOriginY: previousEntryOriginY
         };
     };
+    /**
+     * 
+     * @param {Number} numColumns
+     * @param {Number} seriesIndex
+     * @param {Number} previousEntryOriginX
+     * @param {Number} previousEntryOriginY
+     * @param {Number} previousEntryWidth
+     * @param {Number} previousEntryHeight
+     * @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
+     */
+    function table (numColumns, seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+        return {
+            nextEntryOriginX: previousEntryWidth * (seriesIndex % numColumns),
+            nextEntryOriginY: previousEntryHeight * (seriesIndex % numColumns)
+        };
+    };
+    /**
+     * This function is not a layout function. This function returns a layout 
+     * function when called. This function should always be called, not simply 
+     * referenced.
+     * @param {Number} n
+     * @returns {Function} the layout function that will be referenced.
+     */
+    function tableWithNColumns(n){
+        if(1 !== arguments.length){
+            throw Error('You wrote "tableWithNColumns", you should write "tableWithNColumns(42)" or any integer');
+        }
+        else{
+            return function(){
+                var args = $.makeArray(arguments);
+                args.unshift(n);
+                table.apply(undefined, args);
+            };
+        }
+    };
     $.plot.canvasLegend.layouts = {
         vertical: vertical,
-        horizontal: horizontal
+        horizontal: horizontal,
+        tableWithNColumns:tableWithNColumns
     };
 }());

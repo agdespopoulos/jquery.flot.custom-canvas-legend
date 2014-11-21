@@ -12,6 +12,20 @@ $(document).ready(function () {
                 return false;//break
             }
         });
+        /**
+         * 
+         * @param {Number} n - number of additional series to add
+         * @param {Array} series
+         * @returns {Array} series with 'n' more series added onto it
+         */
+        var addNMoreSeries = function(numAdditionalSeries, series){
+            var mySeries = [].concat(series);
+            
+            for(var i = 0; i < numAdditionalSeries; i++){
+                mySeries.push({label: 'additional_' + i, data: [[0+i, 1], [1+i, 3], [2+i, 5], [3+i, 7],[3+i, 11]]});
+            };
+            return mySeries;
+        };
         var pluginMethods = customCanvasLegend._private_methods;
 
 
@@ -93,5 +107,21 @@ $(document).ready(function () {
             options.canvasLegend.layout = vertical;
             var plot = $.plot(plotContainer, series, options);
         });
+        it('should lay out in a table', function(){
+            var mySeries = addNMoreSeries(5, series);
+            
+            var twoColumnedTable = $.plot.canvasLegend.layouts.tableWithNColumns(2);
+            var previousEntryOriginX = 0,
+                previousEntryOriginY = 0,
+                previousEntryWidth = 42,
+                previousEntryHeight = 92;
+//            var nextEntryOrigin =  twoColumnedTable(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+//            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+//            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + previousEntryHeight);
+            //plot it for show
+            options.canvasLegend.layout =  twoColumnedTable;
+            var plot = $.plot(plotContainer, mySeries, options);
+        });
+       
     });//root describe block
 });//document ready
