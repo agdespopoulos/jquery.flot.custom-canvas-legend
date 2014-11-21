@@ -363,7 +363,7 @@
     }
     /**
      * @param position {String}, one of (ne, nw, se, sw)
-     * @param margin {undefined|Array|Number}, if array, must have exactly two elements, both of type Number
+     * @param margin {undefined|null|Array|Number}, if array, must have exactly two elements, both of type Number
      * @param plotOffset {Object}, must have two properties of name "top" and "left", both having values of type Number
      * @param borderWidth {Number}
      * @param legendWidth {Number}
