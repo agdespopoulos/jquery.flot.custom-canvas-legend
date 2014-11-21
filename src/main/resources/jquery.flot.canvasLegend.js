@@ -79,7 +79,7 @@
  */
 
 (function ($) {
-
+    "use strict";
     function init(plot) {
         plot.hooks.processOptions.push(addLastDrawHook);
     }

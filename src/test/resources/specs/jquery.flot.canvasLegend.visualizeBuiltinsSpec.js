@@ -1,6 +1,6 @@
 /* global $ document describe beforeEach afterEach expect it Math*/
 $(document).ready(function () {
-
+    "use strict";
     describe('view all built-in functionality', function () {
 
         var customCanvasLegend, plugin, pluginName = 'canvasLegend';

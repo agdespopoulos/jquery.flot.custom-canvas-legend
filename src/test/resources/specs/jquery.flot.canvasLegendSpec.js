@@ -1,5 +1,6 @@
 /* global $ document describe beforeEach afterEach expect it Math CanvasRenderingContext2D*/
 $(document).ready(function () {
+    "use strict";
     /**
      * @param {Array} array any array
      * @param {String} propertyName property name

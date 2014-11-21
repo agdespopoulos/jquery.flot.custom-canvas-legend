@@ -1,5 +1,6 @@
 /* global $ document describe beforeEach afterEach expect it Math*/
 $(document).ready(function () {
+    "use strict";
 
     describe('jquery.flot.canvasLegend.layouts.js', function () {
         

@@ -1,4 +1,5 @@
 (function(){
+    "use strict";
     $.plot.canvasLegend = $.plot.custom_canvas_legend || {};
     function vertical (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
         //simple vertical layout

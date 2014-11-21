@@ -1,5 +1,6 @@
 /* global $ Math */
 (function () {
+    "use strict";
     $.plot.canvasLegend = $.plot.canvasLegend || {};
 
     var boxLeftLabelRight = (function () {
