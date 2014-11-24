@@ -114,10 +114,19 @@ $(document).ready(function () {
             var previousEntryOriginX = 0,
                 previousEntryOriginY = 0,
                 previousEntryWidth = 42,
-                previousEntryHeight = 92;
-//            var nextEntryOrigin =  twoColumnedTable(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
-//            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
-//            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + previousEntryHeight);
+                previousEntryHeight = 92,
+                maxEntryHeight = 31,
+                maxEntryWidth = 27;
+            var nextEntryOrigin =  twoColumnedTable(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            
+            nextEntryOrigin =  twoColumnedTable(1,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX + maxEntryWidth);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            nextEntryOrigin =  twoColumnedTable(2,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + maxEntryHeight);
             //plot it for show
             options.canvasLegend.entrySize = function(legendCtx, thisSeries, options, fontOptions){
                 legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
