@@ -9,8 +9,13 @@
  * canvasLegend: {
  * 			show: optional boolean, defaulting to true
  * 			position: "ne" or "nw" or "se" or "sw". Ignored if "container" option is specified.
- * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, fontOptions)->{width:Number, height:Number}).
- * 					If a function, the function is called on each entry. The plugin uses this information to calculate the width of the overall legend.
+ * 			entrySize: {width: Number, height: Number} or (function(legendCtx, oneSeries, options, fontOptions)->{width:Number, height:Number}).
+ * 					If a function, the function is called on each series. The plugin uses this return value of the function to calculate the width of the overall legend.
+ * 					The function's parameters are as follows:
+ * 					@param {CanvasRenderingContext2D} legendCtx,
+ * 					@param {Object} oneSeries - a single flot series
+ * 					@param {Object} options - the options passed to canvasLegend
+ * 					@param {Object} fontOptions - options.font merged with the font options from the plot placeholder.
  * 			margin: optional number of pixels or array [x margin, y margin]. Ignored if "container" option is specified.
  * 			container: optional jQuery object wrapping a canvas element, or an actual canvas element, or null, defaulting to null.
  * 					If null, legend will be drawn on the plot's canvas. Else, legend will be drawn in the specified canvas and the "margin" and "position" options will be ignored.
@@ -21,13 +26,34 @@
  *   				Legend entries appear in the same order as their series by default. If "sorted" is "reverse" then they appear in the opposite order from their series. To sort them alphabetically, you can specify true, "ascending" or "descending", where true and "ascending" are equivalent.
  *   
  * 			layout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
- * 					If null, a vertical layout will be used. If a function, the resulting object's properties will be passed as entryOriginX and entryOriginY to the "render" function.
+ * 					If null, a vertical layout will be used. If a function, the properties of the object that the function returns will be passed as entryOriginX and entryOriginY to the "render" function.
+ * 					The function's parameters are as follows:
+ *                                      @param {Number} seriesIndex
+ *                                      @param {Number} previousEntryOriginX
+ *                                      @param {Number} previousEntryOriginY
+ *                                      @param {Number} previousEntryWidth
+ *                                      @param {Number} previousEntryHeight
+ *                                      @param {Number} maxEntryWidth
+ *                                      @param {Number} maxEntryHeight
+ *                                      @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
+ *
  *                      backgroundOpacity : optional Number between 0 and 1, defaulting to 1
  * 			backgroundColor: optional String color, defaulting to white.
  * 			entryRender: optional (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions, maxEntryWidth, maxEntryHeight)->undefined), or null, defaulting to null.
- * 					If a function, the function is called to perform custom rendering of the legend entry for each series. 
- * 					The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
- * 					If null, a box matching the color of the series is drawn to the left of the series text in 13 pt font.
+ *                          If null, a box matching the color of the series is drawn to the left of the series text.
+ *                          If a function, the function is called to perform custom rendering of the legend entry for each series. 
+ *                          The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
+ *                          The function's parameters are as follows:
+ *                          @param {CanvasRenderingContext2D} legendCtx
+ *                          @param {Object} thisSeries a flot series
+ *                          @param {Object} options - the options in options.canvasLegend
+ *                          @param {Number} nextEntryOriginX
+ *                          @param {Number} nextEntryOriginY
+ *                          @param {Object} fontOptions - options.font merged with the font options from the plot placeholder.
+ *                          @param {Number} maxEntryWidth
+ *                          @param {Number} maxEntryHeight
+ *                          @returns {undefined}
+ *
  * 			font: optional object describing any desired font options for the canvas legend. This object is passed to the entryRender and entrySize function as "fontOptions". 
  *                          Any options not specified will default to the value that the main plot container's css dictates.
                               

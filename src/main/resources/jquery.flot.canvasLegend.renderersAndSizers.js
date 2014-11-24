@@ -35,6 +35,18 @@
         var BOX_LABEL_SPACE = 10;
         
         var exports = {};
+        /**
+         * 
+         * @param {CanvasRenderingContext2D} legendCtx
+         * @param {Object} thisSeries a flot series
+         * @param {Object} options - the options in options.canvasLegend
+         * @param {Number} nextEntryOriginX
+         * @param {Number} nextEntryOriginY
+         * @param {Object} fontOptions - options.font merged with the font options from the plot placeholder.
+         * @param {Number} maxEntryWidth
+         * @param {Number} maxEntryHeight
+         * @returns {undefined}
+         */
         exports.render = function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions, maxEntryWidth, maxEntryHeight) {
             var color = thisSeries.color;
             var label = thisSeries.label;
@@ -55,8 +67,15 @@
             var textY = nextEntryOriginY + PADDING  + labelHeight;
             legendCtx.fillText(label, textX, textY);
         };
-        exports.size = function (legendCtx, thisSeries, options, fontOptions) {
-            var label = thisSeries.label;
+        /**
+         * 
+         * @param {CanvasRenderingContext2D} legendCtx
+         * @param {Object} oneSeries - a single flot series
+         * @param {Object} options - the options passed to canvasLegend
+         * @param {Object} fontOptions - options.font merged with the font options from the plot placeholder.
+         */
+        exports.size = function (legendCtx, oneSeries, options, fontOptions) {
+            var label = oneSeries.label;
             setupCanvasForText(legendCtx, fontOptions);
             var labelHeight = calcLabelHeight(legendCtx);
             var labelWidth = legendCtx.measureText(label).width;
