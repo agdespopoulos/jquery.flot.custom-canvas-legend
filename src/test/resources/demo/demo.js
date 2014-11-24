@@ -1,6 +1,6 @@
 $(document).ready(function () {
     "use strict";
-    var beforeEachFunctions = []
+    var beforeEachFunctions = [];
     function beforeEach(fn) {
         beforeEachFunctions.push(fn);
     }
