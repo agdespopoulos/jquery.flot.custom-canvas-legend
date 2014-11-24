@@ -107,7 +107,18 @@ $(document).ready(function () {
             options.canvasLegend.layout = vertical;
             var plot = $.plot(plotContainer, series, options);
         });
-        it('should lay out in a table', function(){
+        var justTextSize = function (legendCtx, thisSeries, options, fontOptions) {
+            legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
+            var label = thisSeries.label;
+            var labelHeight = legendCtx.measureText('M').width;
+            var labelWidth = legendCtx.measureText(label).width;
+
+            return {
+                width: labelWidth,
+                height: labelHeight
+            };
+        };
+        it('should lay out in a 2-column table', function(){
             var mySeries = addNMoreSeries(5, series);
             
             var twoColumnedTable = $.plot.canvasLegend.layouts.tableWithNColumns(2);
@@ -128,18 +139,38 @@ $(document).ready(function () {
             expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
             expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + maxEntryHeight);
             //plot it for show
-            options.canvasLegend.entrySize = function(legendCtx, thisSeries, options, fontOptions){
-                legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
-                var label = thisSeries.label;
-                var labelHeight = legendCtx.measureText('M').width;
-                var labelWidth = legendCtx.measureText(label).width;
-              
-                return {
-                    width:  labelWidth ,
-                    height: labelHeight 
-                };
-            };
+            options.canvasLegend.entrySize = justTextSize;
             options.canvasLegend.layout = twoColumnedTable;
+            var plot = $.plot(plotContainer, mySeries, options);
+        });
+        it('should lay out in a 3-column table', function(){
+            var mySeries = addNMoreSeries(7, series);
+            
+            var threeColumnTable = $.plot.canvasLegend.layouts.tableWithNColumns(3);
+            var previousEntryOriginX = 0,
+                previousEntryOriginY = 0,
+                previousEntryWidth = 42,
+                previousEntryHeight = 92,
+                maxEntryHeight = 31,
+                maxEntryWidth = 27;
+            var nextEntryOrigin =  threeColumnTable(0,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            
+            nextEntryOrigin =  threeColumnTable(1,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX + maxEntryWidth);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            nextEntryOrigin =  threeColumnTable(2,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX + 2*maxEntryWidth);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY);
+            
+            nextEntryOrigin =  threeColumnTable(3,previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight);
+            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
+            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + maxEntryHeight);
+            
+            //plot it for show
+            options.canvasLegend.entrySize = justTextSize;
+            options.canvasLegend.layout = threeColumnTable;
             var plot = $.plot(plotContainer, mySeries, options);
         });
        
