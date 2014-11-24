@@ -68,11 +68,11 @@ $(document).ready(function () {
                             width: 50
                         },
                         container: legendContainer,
-                        entryRender: function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) {
+                        entryRender: function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions, maxEntryWidth, maxEntryHeight) {
                             legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
                             legendCtx.fillStyle = thisSeries.color;
                             var charHeight = legendCtx.measureText('M').width;
-                            legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, 50, 50);
+                            legendCtx.fillRect(nextEntryOriginX, nextEntryOriginY, maxEntryWidth, maxEntryHeight);
                             legendCtx.fillStyle = "#000";
                             legendCtx.fillText(thisSeries.label, nextEntryOriginX, nextEntryOriginY + charHeight);
                         },
@@ -119,7 +119,18 @@ $(document).ready(function () {
 //            expect(nextEntryOrigin.nextEntryOriginX).toBe(previousEntryOriginX);
 //            expect(nextEntryOrigin.nextEntryOriginY).toBe(previousEntryOriginY + previousEntryHeight);
             //plot it for show
-            options.canvasLegend.layout =  twoColumnedTable;
+            options.canvasLegend.entrySize = function(legendCtx, thisSeries, options, fontOptions){
+                legendCtx.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
+                var label = thisSeries.label;
+                var labelHeight = legendCtx.measureText('M').width;
+                var labelWidth = legendCtx.measureText(label).width;
+              
+                return {
+                    width:  labelWidth ,
+                    height: labelHeight 
+                };
+            };
+            options.canvasLegend.layout = twoColumnedTable;
             var plot = $.plot(plotContainer, mySeries, options);
         });
        

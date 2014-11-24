@@ -8,9 +8,11 @@
      * @param {Number} previousEntryOriginY
      * @param {Number} previousEntryWidth
      * @param {Number} previousEntryHeight
+     * @param {Number} maxEntryWidth
+     * @param {Number} maxEntryHeight
      * @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
      */
-    function vertical (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+    function vertical (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight){
         //simple vertical layout
         var nextEntryOriginY = previousEntryOriginY + previousEntryHeight;
         return {
@@ -25,9 +27,11 @@
      * @param {Number} previousEntryOriginY
      * @param {Number} previousEntryWidth
      * @param {Number} previousEntryHeight
+     * @param {Number} maxEntryWidth
+     * @param {Number} maxEntryHeight
      * @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
      */
-    function horizontal (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+    function horizontal (seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight){
         //simple vertical layout
         var nextEntryOriginX = previousEntryOriginX + previousEntryWidth;
         return {
@@ -43,12 +47,14 @@
      * @param {Number} previousEntryOriginY
      * @param {Number} previousEntryWidth
      * @param {Number} previousEntryHeight
+     * @param {Number} maxEntryWidth
+     * @param {Number} maxEntryHeight
      * @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
      */
-    function table (numColumns, seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+    function table (numColumns, seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight){
         return {
-            nextEntryOriginX: previousEntryWidth * (seriesIndex % numColumns),
-            nextEntryOriginY: previousEntryHeight * (seriesIndex % numColumns)
+            nextEntryOriginX: maxEntryWidth * (seriesIndex % numColumns),
+            nextEntryOriginY: maxEntryHeight * (Math.floor(seriesIndex / numColumns))
         };
     };
     /**
@@ -66,7 +72,7 @@
             return function(){
                 var args = $.makeArray(arguments);
                 args.unshift(n);
-                table.apply(undefined, args);
+                return table.apply(undefined, args);
             };
         }
     };

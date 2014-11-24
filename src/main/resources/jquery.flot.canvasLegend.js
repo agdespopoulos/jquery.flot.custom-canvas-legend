@@ -9,7 +9,7 @@
  * canvasLegend: {
  * 			show: optional boolean, defaulting to true
  * 			position: "ne" or "nw" or "se" or "sw". Ignored if "container" option is specified.
- * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->{width:Number, height:Number}).
+ * 			entrySize: {width: Number, height: Number} or (function(legendCtx, series, options, fontOptions)->{width:Number, height:Number}).
  * 					If a function, the function is called on each entry. The plugin uses this information to calculate the width of the overall legend.
  * 			margin: optional number of pixels or array [x margin, y margin]. Ignored if "container" option is specified.
  * 			container: optional jQuery object wrapping a canvas element, or an actual canvas element, or null, defaulting to null.
@@ -20,11 +20,11 @@
  * 
  *   				Legend entries appear in the same order as their series by default. If "sorted" is "reverse" then they appear in the opposite order from their series. To sort them alphabetically, you can specify true, "ascending" or "descending", where true and "ascending" are equivalent.
  *   
- * 			layout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
+ * 			layout: optional (function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight)->{nextEntryOriginX: Number, nextEntryOriginY: Number}) or null, defaulting to null.
  * 					If null, a vertical layout will be used. If a function, the resulting object's properties will be passed as entryOriginX and entryOriginY to the "render" function.
  *                      backgroundOpacity : optional Number between 0 and 1, defaulting to 1
  * 			backgroundColor: optional String color, defaulting to white.
- * 			entryRender: optional (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions)->undefined), or null, defaulting to null.
+ * 			entryRender: optional (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions, maxEntryWidth, maxEntryHeight)->undefined), or null, defaulting to null.
  * 					If a function, the function is called to perform custom rendering of the legend entry for each series. 
  * 					The plugin calculates the coordinates for the origin of the current legend entry and passes them to the function. 
  * 					If null, a box matching the color of the series is drawn to the left of the series text in 13 pt font.
@@ -39,7 +39,7 @@
  * 
  *      canvasLegend: {
  * 			show: true,
- * 			entrySize: function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions){
+ * 			entrySize: function(legendCtx, series, options, fontOptions){
  * 					//assume constant symbol width and height
  * 					var symbolWidth = 40;
  * 					var symbolHeight = 15;
@@ -61,12 +61,12 @@
  *					return -1; 
  * 				}
  * 			}		  
- * 			layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight){
+ * 			layout: function(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntryWidth, maxEntryHeight){
  *				 //simple vertical layout
  *				var nextEntryOriginY = previousEntryOriginY + previousEntryHeight; 
  * 				return {nextEntryOriginX: previousEntryOriginX, nextEntryOriginY: nextEntryOriginY};
  * 			}
- * 			entryRender: function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions){
+ * 			entryRender: function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions, maxEntryWidth, maxEntryHeight){
  *				legendCtx.fillStyle = series.someProperty.indicating.theSeries.color;
  *				var symbolHeight = 15;
  *				var symbolWidth = 40; 
@@ -175,6 +175,39 @@
     }
     /**
      * 
+     * @param {Function|Object} entrySize
+     * @param {Array} series
+     * @param {CanvasRenderContext2D} legendCtx
+     * @param {Object} options
+     * @param {Object} fontOptions
+     * @returns {Object} - {height: {Number}, width: {Number}}
+     */
+    function getMaxEntrySize(entrySize, series, legendCtx, options, fontOptions){
+        var thisEntrySize,
+            maxEntryWidth = 0,
+            maxEntryHeight = 0;
+        if ('function' === typeof entrySize) {
+            $.each(series, function (index, thisSeries) {
+                thisEntrySize = entrySize(legendCtx, thisSeries, options, fontOptions);
+                maxEntryWidth = Math.max(thisEntrySize.width, maxEntryWidth);
+                maxEntryHeight = Math.max(thisEntrySize.height, maxEntryHeight);
+            });
+        }
+        else if ('number' === typeof entrySize.height && 'number' === typeof entrySize.width) {
+            maxEntryWidth = entrySize.width;
+            maxEntryHeight = entrySize.height;
+        }
+        else{
+            throw Error('Unrecognized value for "entrySize" option: ' + entrySize);
+        }
+        
+        return {
+            width: maxEntryWidth,
+            height: maxEntryHeight
+        };
+    }
+    /**
+     * 
      * @param {Object|function} entrySize
      * @param {function} layout
      * @param {Array} sortedSeries
@@ -201,9 +234,10 @@
                 potentialYExtremity,
                 thisEntrySize,
                 thisSeries;
-
+        var maxEntrySize = getMaxEntrySize(entrySize, sortedSeries, legendCtx, options, fontOptions);
+        
         if ('function' === typeof entrySize) {
-
+            
             $.each(sortedSeries, function(seriesIndex, thisSeries){
                 if(0 === seriesIndex){
                     nextEntryOrigin = {
@@ -212,7 +246,7 @@
                     };
                 }
                 else{
-                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntrySize.width, maxEntrySize.height);
                 }
                 
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
@@ -241,7 +275,7 @@
                     };
                 }
                 else{
-                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+                    nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntrySize.width, maxEntrySize.height);
                 }
                 nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
                 nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
@@ -338,18 +372,17 @@
                 nextEntryOrigin,
                 nextEntryOriginX,
                 nextEntryOriginY,
-                seriesIndex,
-                thisSeries,
                 thisEntrySize,
                 entryWidth,
-                entryHeight;
+                entryHeight,
+                maxEntrySize = getMaxEntrySize(entrySize, series, legendCtx, options, fontOptions);
 
         $.each(sortedSeries,function(seriesIndex, thisSeries){
-            nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight);
+            nextEntryOrigin = layout(seriesIndex, previousEntryOriginX, previousEntryOriginY, previousEntryWidth, previousEntryHeight, maxEntrySize.width, maxEntrySize.height);
             nextEntryOriginX = nextEntryOrigin.nextEntryOriginX;
             nextEntryOriginY = nextEntryOrigin.nextEntryOriginY;
 
-            entryRender(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions);
+            entryRender(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions, maxEntrySize.width, maxEntrySize.height);
             thisEntrySize = 'function' === typeof entrySize ? entrySize(legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) : entrySize;
             entryWidth = thisEntrySize.width;
             entryHeight = thisEntrySize.height;
@@ -415,7 +448,8 @@
             getFontOptions: getFontOptions,
             getSortedSeries: getSortedSeries,
             getLegendContainerAndContext: getLegendContainerAndContext,
-            getLegendSize: getLegendSize
+            getLegendSize: getLegendSize,
+            getMaxEntrySize: getMaxEntrySize
         }
     });
     

@@ -3,19 +3,20 @@
     "use strict";
     $.plot.canvasLegend = $.plot.canvasLegend || {};
 
+    /**
+     * 
+     * @param {CanvasRenderingContext2D} context
+     * @param {Object} fontOptions
+     * @returns {undefined}
+     */
+    var setupCanvasForText = function (context, fontOptions) {
+        context.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
+        context.textAlign = "left";
+        context.textBaseline = "bottom";
+    };
+        
     var boxLeftLabelRight = (function () {
         
-        /**
-         * 
-         * @param {CanvasRenderingContext2D} context
-         * @param {Object} fontOptions
-         * @returns {undefined}
-         */
-        var setupCanvasForText = function(context, fontOptions){
-            context.font = fontOptions.style + " " + fontOptions.variant + " " + fontOptions.weight + " " + fontOptions.size + "px '" + fontOptions.family + "'";
-            context.textAlign = "left";
-            context.textBaseline = "bottom";
-        };
         /**
          * Estimate the height of the label. Most browsers don't implement
          * a way to calculate actual text height on the canvas.
@@ -34,7 +35,7 @@
         var BOX_LABEL_SPACE = 10;
         
         var exports = {};
-        exports.render = function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) {
+        exports.render = function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions, maxEntryWidth, maxEntryHeight) {
             var color = thisSeries.color;
             var label = thisSeries.label;
             setupCanvasForText(legendCtx, fontOptions);
@@ -54,7 +55,7 @@
             var textY = nextEntryOriginY + PADDING  + labelHeight;
             legendCtx.fillText(label, textX, textY);
         };
-        exports.size = function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions) {
+        exports.size = function (legendCtx, thisSeries, options, fontOptions) {
             var label = thisSeries.label;
             setupCanvasForText(legendCtx, fontOptions);
             var labelHeight = calcLabelHeight(legendCtx);

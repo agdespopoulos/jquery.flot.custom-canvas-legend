@@ -189,7 +189,7 @@ $(document).ready(function () {
                 // A null signifies separate line segments
 
                 var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
-                series = [{label: 'd1', data: d1}, {label: 'd2', data: d2}, {label: 'd3', data: d3}];
+                series = [{label: 'd1', data: d1}, {label: 'dTwo', data: d2}, {label: 'd the third', data: d3}];
                 options = {
                     legend: {
                         show: false
@@ -361,7 +361,11 @@ $(document).ready(function () {
                     var legendCtx = plot.getCanvas().getContext('2d');
                     var fontOptions = pluginMethods.getFontOptions(plot.getPlaceholder());
                     var size = pluginMethods.getLegendSize(options.canvasLegend.entrySize, options.canvasLegend.layout, series, legendCtx, options, fontOptions);
-                    expect(size.width).toBe(legendCtx.measureText('d3').width);
+                    var longestLabel = '';
+                    $.each(series, function(index, oneSeries){
+                       longestLabel = oneSeries.label.length > longestLabel.length ? oneSeries.label : longestLabel;                       
+                    });
+                    expect(size.width).toBe(legendCtx.measureText(longestLabel).width);
                     expect(size.height).toBe(legendCtx.measureText('M').width * series.length);
                 });
             });
