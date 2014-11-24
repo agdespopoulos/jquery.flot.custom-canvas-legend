@@ -40,14 +40,14 @@
          * @param {CanvasRenderingContext2D} legendCtx
          * @param {Object} thisSeries a flot series
          * @param {Object} options - the options in options.canvasLegend
-         * @param {Number} nextEntryOriginX
-         * @param {Number} nextEntryOriginY
+         * @param {Number} entryOriginX
+         * @param {Number} entryOriginY
          * @param {Object} fontOptions - options.font merged with the font options from the plot placeholder.
          * @param {Number} maxEntryWidth
          * @param {Number} maxEntryHeight
          * @returns {undefined}
          */
-        exports.render = function (legendCtx, thisSeries, options, nextEntryOriginX, nextEntryOriginY, fontOptions, maxEntryWidth, maxEntryHeight) {
+        exports.render = function (legendCtx, thisSeries, options, entryOriginX, entryOriginY, fontOptions, maxEntryWidth, maxEntryHeight) {
             var color = thisSeries.color;
             var label = thisSeries.label;
             setupCanvasForText(legendCtx, fontOptions);
@@ -56,15 +56,15 @@
             var boxSize = labelHeight;//square
             //draw box
             legendCtx.fillStyle = color;
-            var boxX = nextEntryOriginX + PADDING;
-            var boxY = nextEntryOriginY + PADDING;
+            var boxX = entryOriginX + PADDING;
+            var boxY = entryOriginY + PADDING;
             legendCtx.fillRect(boxX, boxY, boxSize, boxSize);
             //draw label
             legendCtx.fillStyle = "#000";
             var textX = boxX + boxSize + BOX_LABEL_SPACE;
             // for textY, we need an additional offset of labelHeight because text 
             // is drawn above and to the right of the coords passed to context.fillText
-            var textY = nextEntryOriginY + PADDING  + labelHeight;
+            var textY = entryOriginY + PADDING  + labelHeight;
             legendCtx.fillText(label, textX, textY);
         };
         /**
