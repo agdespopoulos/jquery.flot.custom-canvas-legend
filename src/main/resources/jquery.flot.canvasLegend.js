@@ -380,7 +380,14 @@
         var oldFillStyle = legendCtx.fillStyle;
 
         //render background
-        legendCtx.globalAlpha = canvasLegendOpts.backgroundOpacity || 1;
+        var backgroundOpacity = canvasLegendOpts.backgroundOpacity;
+        if(!isNaN(backgroundOpacity) && 0 <= backgroundOpacity && 1>= backgroundOpacity){
+        	legendCtx.globalAlpha = backgroundOpacity;
+        }
+        else{
+        	legendCtx.globalAlpha = 1;
+        }
+        
         legendCtx.fillStyle = canvasLegendOpts.backgroundColor || '#fff';
         legendCtx.fillRect(legendOriginX, legendOriginY, legendWidth, legendHeight);
 
