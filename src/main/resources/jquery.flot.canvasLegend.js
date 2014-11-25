@@ -35,7 +35,7 @@
  *                                      @param {Number} maxEntryHeight
  *                                      @returns {Object} - {nextEntryOriginX: {Number}, nextEntryOriginY: {Number}}
  *
- *                      backgroundOpacity : optional Number between 0 and 1, defaulting to 1
+ *          backgroundOpacity : optional Number between 0 and 1, defaulting to 1
  * 			backgroundColor: optional String color, defaulting to white.
  * 			entryRender: (function(legendCtx, series, options, entryOriginX, entryOriginY, fontOptions, maxEntryWidth, maxEntryHeight)->undefined).
  *                          This function is called to perform custom rendering of the legend entry for each series. 
@@ -332,7 +332,7 @@
             return;
         }
         var placeholder = plot.getPlaceholder();
-        var fontOptions = getFontOptions(placeholder);
+        var fontOptions = getFontOptions(placeholder, canvasLegendOpts.font);
         var entryRender = canvasLegendOpts.entryRender;
         var layout = canvasLegendOpts.layout;
 
@@ -343,7 +343,9 @@
         //depending on what is contained in canvas.container
         var legendCtx = containerAndContext.context;
 
-        var series = plot.getData();
+        var series = $(plot.getData()).filter(function(index, oneSeries){
+        	return 0 < oneSeries.label.length;
+        });
         var plotOffset = plot.getPlotOffset();
         var plotHeight = plot.height();
         var plotWidth = plot.width();
