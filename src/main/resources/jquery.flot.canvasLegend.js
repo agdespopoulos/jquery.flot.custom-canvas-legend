@@ -344,7 +344,7 @@
         var legendCtx = containerAndContext.context;
 
         var series = $(plot.getData()).filter(function(index, oneSeries){
-        	return 0 < oneSeries.label.length;
+        	return oneSeries.label && (0 < oneSeries.label.length);
         });
         var plotOffset = plot.getPlotOffset();
         var plotHeight = plot.height();
