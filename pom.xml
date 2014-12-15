@@ -36,8 +36,8 @@
     </licenses>
     <scm>
         <url>https://github.com/USGS-CIDA/custom-canvas-legend</url>
-        <connection>scm:git:git@github.com:USGS-CIDA/custom-canvas-legend.git</connection>
-        <developerConnection>scm:git:git@github.com:USGS-CIDA/custom-canvas-legend.git</developerConnection>
+        <connection>scm:git:git@github.com:USGS-CIDA/jquery.flot.custom-canvas-legend.git</connection>
+        <developerConnection>scm:git:git@github.com:USGS-CIDA/jquery.flot.custom-canvas-legend.git</developerConnection>
     </scm>
     <distributionManagement>
         <repository>
