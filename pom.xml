@@ -153,5 +153,14 @@
                     </configuration>
                 </plugin>
             </plugins>
+            <resources>
+                <resource>
+                    <directory>src/test/resources</directory>
+                    <includes>
+                        <include>**/*.js</include>
+                        <include>**/*.html</include>
+                    </includes>
+                </resource>
+            </resources>
     </build>
 </project>

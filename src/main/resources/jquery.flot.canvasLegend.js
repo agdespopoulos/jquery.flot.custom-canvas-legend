@@ -344,7 +344,7 @@
         var legendCtx = containerAndContext.context;
 
         var series = $(plot.getData()).filter(function(index, oneSeries){
-        	return oneSeries.label && (0 < oneSeries.label.length);
+            return oneSeries.label && (0 < oneSeries.label.length);
         });
         var plotOffset = plot.getPlotOffset();
         var plotHeight = plot.height();
@@ -382,10 +382,10 @@
         //render background
         var backgroundOpacity = canvasLegendOpts.backgroundOpacity;
         if(!isNaN(backgroundOpacity) && 0 <= backgroundOpacity && 1>= backgroundOpacity){
-        	legendCtx.globalAlpha = backgroundOpacity;
+            legendCtx.globalAlpha = backgroundOpacity;
         }
         else{
-        	legendCtx.globalAlpha = 1;
+            legendCtx.globalAlpha = 1;
         }
         
         legendCtx.fillStyle = canvasLegendOpts.backgroundColor || '#fff';
