@@ -1,6 +1,6 @@
 (function(){
     "use strict";
-    $.plot.canvasLegend = $.plot.custom_canvas_legend || {};
+    $.plot.canvasLegend = $.plot.canvasLegend || {};
     /**
      * 
      * @param {Number} seriesIndex
